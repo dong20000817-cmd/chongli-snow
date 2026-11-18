@@ -2,12 +2,14 @@
 
 崇礼 / 金山岭 **8 家雪场**的实时天气、风力和每日滑雪建议，为 iPhone 设计的 PWA。
 
-- 线上地址（部署后）：<https://dong20000817-cmd.github.io/chongli-snow/>
+- 线上地址：<https://dong20000817-cmd.github.io/chongli-snow/>
 - 雪场：万龙、云顶、太舞、富龙、翠云山银河、多乐美地、雪如意、金山岭银河
 - 数据：Open-Meteo（CC BY 4.0），浏览器直接取数，不需要 Mac 开机
 - 技术：Vite + React + TypeScript + PWA，GitHub Pages 托管
 
 ## 怎么看
+
+线上已部署，iPhone 直接打开即可；断网刷新仍会显示最后一次缓存，并出现“离线”提示。
 
 iPhone Safari 打开线上地址：
 

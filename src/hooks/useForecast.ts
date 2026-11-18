@@ -20,7 +20,8 @@ export function useForecast(): ForecastState {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(initial)
   const [status, setStatus] = useState<ForecastStatus>(initial ? 'refreshing' : 'loading')
   const [error, setError] = useState<string | null>(null)
-  const [offline, setOffline] = useState(false)
+  const [fetchOffline, setFetchOffline] = useState(false)
+  const [online, setOnline] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine))
   const snapshotRef = useRef<Snapshot | null>(snapshot)
   const inFlight = useRef<AbortController | null>(null)
   const requestSeq = useRef(0)
@@ -40,7 +41,7 @@ export function useForecast(): ForecastState {
         snapshotRef.current = next
         setSnapshot(next)
         saveSnapshot(next)
-        setOffline(false)
+        setFetchOffline(false)
         setStatus('ready')
       })
       .catch((err: unknown) => {
@@ -52,7 +53,7 @@ export function useForecast(): ForecastState {
         }
         const message = err instanceof Error ? err.message : '网络异常'
         if (snapshotRef.current) {
-          setOffline(true)
+          setFetchOffline(true)
           setStatus('ready')
           setError(message)
         } else {
@@ -73,13 +74,19 @@ export function useForecast(): ForecastState {
       if (document.visibilityState === 'visible') refresh()
     }
     document.addEventListener('visibilitychange', onVisible)
+    const onOnline = () => { setOnline(true); refresh() }
+    const onOffline = () => setOnline(false)
+    window.addEventListener('online', onOnline)
+    window.addEventListener('offline', onOffline)
     return () => {
       window.clearInterval(timer)
       document.removeEventListener('visibilitychange', onVisible)
+      window.removeEventListener('online', onOnline)
+      window.removeEventListener('offline', onOffline)
       inFlight.current?.abort()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { snapshot, status, error, offline, refresh }
+  return { snapshot, status, error, offline: !online || fetchOffline, refresh }
 }

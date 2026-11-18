@@ -8,6 +8,7 @@ const PORT = 9334
 const BASE = process.env.SKI_URL || 'http://127.0.0.1:5173'
 const VW = Number(process.env.SKI_W || 393)
 const VH = Number(process.env.SKI_H || 852)
+const RESORT = process.env.SKI_RESORT || 'wanlong'
 const OUT = '/tmp/ski-prod'
 fs.mkdirSync(OUT, { recursive: true })
 const profile = '/tmp/chrome-ski-prod-' + process.pid
@@ -68,7 +69,7 @@ try {
   await rpc(ws, 'Page.enable'); await rpc(ws, 'Runtime.enable')
   await rpc(ws, 'Emulation.setDeviceMetricsOverride', { width: VW, height: VH, deviceScaleFactor: 3, mobile: true, screenWidth: VW, screenHeight: VH })
   await rpc(ws, 'Emulation.setUserAgentOverride', { userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1', platform: 'iPhone' })
-  await rpc(ws, 'Page.navigate', { url: `${BASE}/#/home/wanlong` })
+  await rpc(ws, 'Page.navigate', { url: `${BASE}/#/home/${RESORT}` })
   await waitFor(ws, "document.querySelector('.verdict')", 'home')
   await evalJs(ws, 'localStorage.clear()')
   await rpc(ws, 'Page.reload'); await sleep(800)

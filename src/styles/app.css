@@ -72,7 +72,7 @@ img{display:block}
 .verdict:after{content:"";position:absolute;right:-30px;top:-50px;width:150px;height:150px;border-radius:50%;background:currentColor;opacity:.10;filter:blur(12px)}
 .verdict-top{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
 .verdict-glyph{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.18);flex:none}
-.verdict-label{font-size:22px;font-weight:760;letter-spacing:-.2px;line-height:1.15}
+.verdict-label{font-size:22px;font-weight:760;letter-spacing:-.2px;line-height:1.15;color:#fff}
 .verdict-window{font-size:10.5px;color:var(--ink2);margin-top:2px}
 .verdict-reason{position:relative;z-index:1;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.9);margin-top:8px}
 .verdict-foot{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10.5px;color:var(--ink2)}

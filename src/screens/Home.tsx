@@ -66,7 +66,7 @@ export function Home({
       {(offline || stale) && <OfflineBanner snapshot={snapshot} error={error} stale={stale} />}
       <h1 className="resort-title">{resort.name}</h1>
       <div className="resort-sub">
-        山顶 {resort.peakElev}m · 山底 {resort.baseElev}m{resort.region === '承德' ? ' · 承德滦平' : ''}
+        山顶 {resort.peakElev}m · 山底 {resort.baseElev}m
       </div>
 
       <div className="hero">

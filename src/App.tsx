@@ -4,19 +4,26 @@ import { useHashRoute } from './hooks/useHashRoute'
 import { RESORTS, DEFAULT_RESORT_ID } from './data/resorts'
 import { currentHour, isStale } from './lib/time'
 import { saveResortId } from './lib/storage'
+import { ROAD_DATA } from './lib/status'
 import { backgroundClass, ErrorScreen, LoadingScreen } from './components/Common'
 import { SwitchSheet } from './components/SwitchSheet'
 import { WhySheet } from './components/WhySheet'
+import { RouteSheet } from './components/RouteSheet'
+import { TabBar, type ModuleTab } from './components/TabBar'
 import { Home } from './screens/Home'
 import { WindDetail } from './screens/WindDetail'
 import { Week } from './screens/Week'
+import { RoadScreen } from './screens/RoadScreen'
+import { SnowScreen } from './screens/SnowScreen'
+import { DevPage } from './screens/DevPage'
 
-type Sheet = null | { type: 'switch' } | { type: 'why'; day: number }
+type Sheet = null | { type: 'switch' } | { type: 'why'; day: number } | { type: 'routes' }
 
 export default function App() {
   const { route, navigate } = useHashRoute()
   const { snapshot, status, error, offline, refresh } = useForecast()
   const [sheet, setSheet] = useState<Sheet>(null)
+  const [routeId, setRouteId] = useState(ROAD_DATA.routes[0].id)
 
   const resort = useMemo(() => {
     if (!snapshot) return null
@@ -32,8 +39,8 @@ export default function App() {
   }, [snapshot])
 
   useEffect(() => {
-    if (resort) document.title = `${resort.short} · 滑雪天气通`
-  }, [resort])
+    if (resort) document.title = route.screen === 'dev' ? '开发者简报 · 滑雪天气通' : `${resort.short} · 滑雪天气通`
+  }, [resort, route.screen])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -50,16 +57,41 @@ export default function App() {
   const selectResort = (id: string) => {
     saveResortId(id)
     setSheet(null)
-    navigate('home', id)
+    navigate(route.screen === 'snow' ? 'snow' : 'home', id)
   }
+
+  const activeTab: ModuleTab = route.screen === 'road' ? 'road' : route.screen === 'snow' ? 'snow' : 'weather'
+  const onTab = (tab: ModuleTab) => {
+    if (tab === 'weather') navigate('home')
+    else if (tab === 'road') navigate('road')
+    else navigate('snow')
+  }
+  const onContext = () => {
+    if (activeTab === 'road') setSheet({ type: 'routes' })
+    else setSheet({ type: 'switch' })
+  }
+
+  const bg = route.screen === 'road'
+    ? 'bg-cloud'
+    : route.screen === 'snow'
+      ? 'bg-snow'
+      : route.screen === 'dev'
+        ? 'bg-night'
+        : backgroundClass(current)
 
   return (
     <div className={`app${sheet ? ' behind' : ''}`}>
-      <div className={`bg ${backgroundClass(current)}`} />
-      {route.screen === 'wind' ? (
+      <div className={`bg ${bg}`} />
+      {route.screen === 'dev' ? (
+        <DevPage snapshot={snapshot} resortId={resort.id} onRefresh={refresh} refreshing={status === 'refreshing'} />
+      ) : route.screen === 'wind' ? (
         <WindDetail resort={resort} snapshot={snapshot} onBack={() => navigate('home')} offline={offline} stale={stale} error={error} />
       ) : route.screen === 'week' ? (
         <Week resort={resort} snapshot={snapshot} onBack={() => navigate('home')} onOpenWhy={day => setSheet({ type: 'why', day })} offline={offline} stale={stale} error={error} />
+      ) : route.screen === 'road' ? (
+        <RoadScreen routeId={routeId} onSelectRoute={setRouteId} today={snapshot.today} />
+      ) : route.screen === 'snow' ? (
+        <SnowScreen resort={resort} today={snapshot.today} />
       ) : (
         <Home
           resort={resort}
@@ -72,7 +104,15 @@ export default function App() {
           onOpenWhy={day => setSheet({ type: 'why', day: day ?? 0 })}
           onOpenWind={() => navigate('wind')}
           onOpenWeek={() => navigate('week')}
-          onOpenSwitch={() => setSheet({ type: 'switch' })}
+        />
+      )}
+
+      {route.screen !== 'dev' && (
+        <TabBar
+          active={activeTab}
+          onTab={onTab}
+          onContext={onContext}
+          contextLabel={activeTab === 'road' ? '切换路线' : '切换雪场'}
         />
       )}
 
@@ -82,6 +122,13 @@ export default function App() {
           snapshot={snapshot}
           selectedId={resort.id}
           onSelect={selectResort}
+          onClose={() => setSheet(null)}
+        />
+      )}
+      {sheet?.type === 'routes' && (
+        <RouteSheet
+          selectedId={routeId}
+          onSelect={id => { setRouteId(id); setSheet(null) }}
           onClose={() => setSheet(null)}
         />
       )}

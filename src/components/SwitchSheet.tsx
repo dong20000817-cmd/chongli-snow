@@ -47,7 +47,7 @@ export function SwitchSheet({ resorts, snapshot, selectedId, onSelect, onClose }
           )
         })}
       </div>
-      <div className="sheet-foot">顶部徽标为今天的日间建议 · 数据 {snapshot.generatedAt.slice(11, 16)}</div>
+      <div className="sheet-foot">顶部徽标为日间建议 · 数据 {snapshot.generatedAt.slice(11, 16)}</div>
     </BottomSheet>
   )
 }

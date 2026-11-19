@@ -1,0 +1,47 @@
+/* 雪道真实图建模 + 时间轴演示 */
+.real-summary{display:flex;gap:9px;margin-top:12px}
+.real-big{flex:1;padding:12px 14px;border-radius:18px;background:linear-gradient(135deg,rgba(48,209,88,.20),rgba(48,209,88,.04)),rgba(255,255,255,.07);border:1px solid rgba(48,209,88,.22)}
+.real-big .k{font-size:9px;color:var(--ink3)}
+.real-big .v{font-size:27px;font-weight:740;letter-spacing:-.8px;margin-top:3px;line-height:1}
+.real-big .v small{font-size:11px;font-weight:500;color:var(--ink2);letter-spacing:0;margin-left:2px}
+.real-big .s{font-size:9px;color:var(--ink3);margin-top:4px}
+.real-side{width:128px;padding:10px 12px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.real-side .line{display:flex;justify-content:space-between;font-size:9px;color:var(--ink3);margin-bottom:5px}
+.real-side .line b{font-size:11px;color:#fff;font-weight:650}
+.real-side .line:last-child{margin-bottom:0}
+.real-map-card{margin-top:10px;padding:10px 10px 7px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);overflow:hidden}
+.real-map-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:1px 2px}
+.real-map-title{font-size:12px;font-weight:680}
+.real-map-sub{font-size:8px;color:var(--ink4);margin-top:2px}
+.time-badge{font-size:8px;color:#9ED4FF;background:rgba(10,132,255,.13);border:1px solid rgba(10,132,255,.22);padding:3px 6px;border-radius:6px;white-space:nowrap}
+.real-map{display:block;width:100%;height:auto;margin-top:3px}
+.map-note{display:flex;justify-content:space-between;font-size:7.5px;color:var(--ink4);padding:0 3px;margin-top:1px}
+.time-card{margin-top:10px;padding:12px 13px 11px;border-radius:20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11)}
+.time-head{display:flex;justify-content:space-between;align-items:flex-start}
+.time-title{font-size:12px;font-weight:680}
+.time-sub{font-size:8px;color:var(--ink3);margin-top:2px}
+.time-now{font-size:8.5px;color:#9ED4FF;background:rgba(10,132,255,.12);border:1px solid rgba(10,132,255,.22);padding:3px 7px;border-radius:6px}
+.time-rail{position:relative;height:34px;margin:8px 2px 0}
+.rail-line{position:absolute;left:0;right:0;top:16px;height:3px;border-radius:2px;background:rgba(255,255,255,.13)}
+.rail-fill{position:absolute;left:0;top:16px;height:3px;border-radius:2px;background:linear-gradient(90deg,#30D158,#0A84FF);opacity:.85}
+.rail-dot{position:absolute;top:12px;width:10px;height:10px;border-radius:50%;background:#0A84FF;border:2px solid rgba(10,132,255,.3);transform:translateX(-50%);z-index:2}
+.rail-dot.green{background:#30D158;border-color:rgba(48,209,88,.3)}
+.rail-dot.future{background:#0A84FF;border-color:rgba(10,132,255,.3)}
+.rail-knob{position:absolute;top:8px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.16),0 3px 8px rgba(0,0,0,.3);transform:translateX(-50%);z-index:3}
+.rail-knob:after{content:"";position:absolute;inset:5px;border-radius:50%;background:#0A84FF}
+.rail-labels{display:flex;justify-content:space-between;font-size:7.5px;color:var(--ink4);margin-top:-1px;padding:0 1px}
+.rail-labels b{color:var(--ink2);font-weight:600}
+.time-events{margin-top:7px;border-top:1px solid rgba(255,255,255,.08);padding-top:6px}
+.time-event{display:flex;align-items:flex-start;gap:7px;padding:4px 0;font-size:8.5px;line-height:1.45;color:var(--ink3)}
+.time-event .te-dot{width:6px;height:6px;border-radius:50%;background:#30D158;flex:none;margin-top:4px}
+.time-event.future .te-dot{background:#0A84FF}
+.time-event.active{color:#fff}
+.time-event.active .te-dot{box-shadow:0 0 0 3px rgba(10,132,255,.15)}
+.time-event b{color:var(--ink2);font-weight:650}
+.time-event .te-time{font-size:7.5px;color:var(--ink4);white-space:nowrap;min-width:56px}
+.trail-actions{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:8px 2px 0;font-size:8.5px;color:var(--ink3)}
+.trail-actions b{color:#fff;font-weight:650}
+.new-note{font-size:8px;color:#8EE6A8;background:rgba(48,209,88,.12);border:1px solid rgba(48,209,88,.2);padding:2px 5px;border-radius:4px;margin-left:4px}
+.detail-map{margin-top:7px;border-radius:13px;background:rgba(255,255,255,.035);padding:4px}
+.detail-map svg{display:block;width:100%;height:auto}
+.dyn-caption{position:absolute;left:20px;right:20px;bottom:92px;z-index:45;text-align:center;font-size:8px;color:rgba(255,255,255,.55);pointer-events:none}

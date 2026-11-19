@@ -29,6 +29,8 @@ const PATHS = {
   external: '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   cable: '<path d="M3 5.5h18M6 5.5 8.5 19M18 5.5 15.5 19M7.2 12h9.6M8 19h8"/><path d="M10 5.5V9h4V5.5"/>',
   menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  road: '<path d="M6 21 9 3M18 21 15 3M12 5v3M12 11v3M12 17v3"/>',
+  trail: '<path d="M3 19h18L14 6l-3.5 6.5L8 9l-5 10Z"/><path d="m10.5 12.5 2-2 2 2"/>',
 } as const
 
 export type IconName = keyof typeof PATHS

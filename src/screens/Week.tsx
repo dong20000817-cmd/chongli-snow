@@ -19,7 +19,7 @@ export function Week({ resort, snapshot, onBack, onOpenWhy, offline, stale, erro
   const best = findBestDay(days)
   const bestMeta = TIERS[best.day.tier]
   return (
-    <main className="screen week">
+    <main className="screen week with-tabs">
       <div className="nav">
         <button className="nav-back" onClick={onBack} aria-label="返回"><Icon name="back" size={16} /></button>
         <div className="nav-title">未来 7 天</div>

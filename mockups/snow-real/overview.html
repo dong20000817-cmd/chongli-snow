@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>雪道真实建模 · 时间轴效果图</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#080d14;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Hiragino Sans GB",sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding:36px 42px 30px;background:radial-gradient(75% 45% at 50% 0%,rgba(30,70,110,.24),transparent 70%),#080d14;min-height:100vh}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;border-bottom:1px solid rgba(255,255,255,.13);padding-bottom:16px}
+  .brand{font-size:11px;letter-spacing:.18em;color:#7fb9e8;font-weight:700}
+  h1{font-size:31px;letter-spacing:-.8px;margin:6px 0 0;font-weight:740}
+  .tag{display:inline-block;font-size:10px;color:#9ed4ff;background:rgba(10,132,255,.12);border:1px solid rgba(10,132,255,.22);padding:3px 8px;border-radius:999px;margin-top:7px}
+  .sub{font-size:11px;color:rgba(255,255,255,.48);line-height:1.7;text-align:right}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:25px 30px;margin-top:24px}
+  .phone{border:8px solid #171b20;border-radius:46px;background:#000;box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;line-height:0}
+  .phone img{width:100%;height:auto;display:block}
+  .cap{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:9px;padding:0 3px}
+  .cap b{font-size:12px;font-weight:650}
+  .cap span{font-size:9.5px;color:rgba(255,255,255,.38);white-space:nowrap}
+  .foot{margin-top:22px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1);font-size:9.5px;color:rgba(255,255,255,.34);line-height:1.7}
+</style>
+</head>
+<body>
+  <div class="head">
+    <div><div class="brand">TRAIL MAP MODELING · TIME MACHINE</div><h1>雪道真实图建模 + 时间轴</h1><div class="tag">基于官方雪道图重绘 · 动态开放状态</div></div>
+    <div class="sub">雪道几何按官方图重绘，保留真实雪道名称/难度/位置关系<br>实线=已开放；虚线+光晕=预计开放；灰色=关闭<br>未来状态只展示官方预计，不冒充已开放</div>
+  </div>
+  <div class="grid">
+    <div><div class="phone"><img src="screens/01-snow-now.png" alt="现在"></div><div class="cap"><b>01 · 现在</b><span>8/32 已开放</span></div></div>
+    <div><div class="phone"><img src="screens/02-snow-tomorrow.png" alt="明天"></div><div class="cap"><b>02 · 11/19 09:00</b><span>实开 8 + 预计 2</span></div></div>
+    <div><div class="phone"><img src="screens/03-snow-detail.png" alt="雪道详情"></div><div class="cap"><b>03 · 单条雪道详情</b><span>玉龙道 · 预计开放</span></div></div>
+    <div><div class="phone"><img src="screens/04-snow-final.png" alt="满开"></div><div class="cap"><b>04 · 11/21 09:00</b><span>实开 8 + 预计 4</span></div></div>
+  </div>
+  <div class="foot">效果图中的雪道几何是“按官方图重绘”的演示；正式版必须获得雪场授权或使用可授权底图。雪道状态来自官方公众号人工/半自动整理，未来开放时间以当日官方公告为准。</div>
+</body>
+</html>

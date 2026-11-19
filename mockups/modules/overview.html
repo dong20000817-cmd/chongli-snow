@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>滑雪天气通 · 三模块效果图</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#080d14;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Hiragino Sans GB",sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding:36px 42px 30px;background:radial-gradient(75% 45% at 50% 0%,rgba(30,70,110,.24),transparent 70%),#080d14;min-height:100vh}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;border-bottom:1px solid rgba(255,255,255,.13);padding-bottom:16px}
+  .brand{font-size:11px;letter-spacing:.18em;color:#7fb9e8;font-weight:700}
+  h1{font-size:32px;letter-spacing:-.8px;margin:6px 0 0;font-weight:740}
+  .sub{font-size:11px;color:rgba(255,255,255,.48);line-height:1.7;text-align:right}
+  .tag{display:inline-block;font-size:10px;color:#9ed4ff;background:rgba(10,132,255,.12);border:1px solid rgba(10,132,255,.22);padding:3px 8px;border-radius:999px;margin-top:7px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px 28px;margin-top:24px}
+  .shot{min-width:0}
+  .phone{border:8px solid #171b20;border-radius:46px;background:#000;box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;line-height:0}
+  .phone img{width:100%;height:auto;display:block}
+  .cap{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:9px;padding:0 3px}
+  .cap b{font-size:12px;font-weight:650}
+  .cap span{font-size:9.5px;color:rgba(255,255,255,.38);white-space:nowrap}
+  .foot{margin-top:22px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1);font-size:9.5px;color:rgba(255,255,255,.34);display:flex;justify-content:space-between;gap:20px;line-height:1.7}
+</style>
+</head>
+<body>
+  <div class="head">
+    <div>
+      <div class="brand">SKI WEATHER · MODULE REVIEW</div>
+      <h1>滑雪天气通 · 三模块效果图</h1>
+      <div class="tag">天气 / 路况 / 雪道 · iOS 底部气泡导航</div>
+    </div>
+    <div class="sub">天气内容保持原样，只新增底部导航<br>路况与雪道为演示数据，标注了“示意/官方来源”<br>截图尺寸 393×852 @3x</div>
+  </div>
+  <div class="grid">
+    <div class="shot"><div class="phone"><img src="screens/01-weather.png" alt="天气"></div><div class="cap"><b>01 · 天气</b><span>底部三模块导航</span></div></div>
+    <div class="shot"><div class="phone"><img src="screens/02-road.png" alt="路况"></div><div class="cap"><b>02 · 路况</b><span>三条路线 + 封路卡</span></div></div>
+    <div class="shot"><div class="phone"><img src="screens/03-road-detail.png" alt="封路详情"></div><div class="cap"><b>03 · 封路详情</b><span>路段 / 时间 / 绕行</span></div></div>
+    <div class="shot"><div class="phone"><img src="screens/04-snow.png" alt="雪道开放"></div><div class="cap"><b>04 · 雪道开放</b><span>示意图 + 时间轴</span></div></div>
+    <div class="shot"><div class="phone"><img src="screens/05-snow-detail.png" alt="雪道详情"></div><div class="cap"><b>05 · 雪道详情</b><span>状态 / 预计 / 来源</span></div></div>
+    <div class="shot"><div class="phone"><img src="screens/06-nav.png" alt="导航组件"></div><div class="cap"><b>06 · 底部导航</b><span>三种选中态</span></div></div>
+  </div>
+  <div class="foot"><span>路况与雪道状态在上线时需接入官方/授权数据或人工核验；示意图不代表官方雪道图。</span><span>滑雪天气通 · 设计稿 v2</span></div>
+</body>
+</html>

@@ -5,7 +5,6 @@ import { temp, tempShort, weatherText } from '../lib/format'
 import { dirText, riskOf, windLevel } from '../lib/wind'
 import { WindChart } from '../components/WindChart'
 import {
-  Fab,
   HourlyStrip,
   MetricGrid,
   OfflineBanner,
@@ -27,7 +26,6 @@ interface HomeProps {
   onOpenWhy: (dayIndex?: number) => void
   onOpenWind: () => void
   onOpenWeek: () => void
-  onOpenSwitch: () => void
 }
 
 export function Home({
@@ -41,7 +39,6 @@ export function Home({
   onOpenWhy,
   onOpenWind,
   onOpenWeek,
-  onOpenSwitch,
 }: HomeProps) {
   const dates = datesOf(resort.hourly)
   const verdictIndex = Math.min(effectiveDayIndex(snapshot), Math.max(0, dates.length - 1))
@@ -61,7 +58,7 @@ export function Home({
   const snow24 = resort.hourly.slice(ci, ci + 24).reduce((sum, h) => sum + (Number(h.peak.snow) || 0), 0)
 
   return (
-    <main className="screen home">
+    <main className="screen home with-tabs">
       <Topline resort={resort} snapshot={snapshot} refreshing={refreshing} onRefresh={onRefresh} />
       {(offline || stale) && <OfflineBanner snapshot={snapshot} error={error} stale={stale} />}
       <h1 className="resort-title">{resort.name}</h1>
@@ -125,7 +122,6 @@ export function Home({
         未来24h降雪 {snow24 ? snow24.toFixed(1) : '0'} cm · 今日建议 <span style={{ color: t.color }}>{t.label}</span>
       </div>
       <SourceNote snapshot={snapshot} />
-      <Fab onClick={onOpenSwitch} />
     </main>
   )
 }

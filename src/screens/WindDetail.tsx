@@ -45,7 +45,7 @@ export function WindDetail({ resort, snapshot, onBack, offline, stale, error }: 
   }, [afterNow, next, current])
 
   return (
-    <main className="screen wind">
+    <main className="screen wind with-tabs">
       <div className="nav">
         <button className="nav-back" onClick={onBack} aria-label="返回"><Icon name="back" size={16} /></button>
         <div className="nav-title">风力详情</div>

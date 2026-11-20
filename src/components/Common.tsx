@@ -6,19 +6,25 @@ import { dirText, levelColor, riskOf, windLevel, windName } from '../lib/wind'
 import { currentIndex, dayLabel, datesOf } from '../lib/time'
 import { Icon, WeatherIcon } from './Icons'
 
-export function Topline({ resort, snapshot, refreshing, onRefresh }: {
+export function Topline({ resort, snapshot, refreshing, onRefresh, onOpenPoster }: {
   resort: ResortForecast
   snapshot: Snapshot
   refreshing: boolean
   onRefresh: () => void
+  onOpenPoster: () => void
 }) {
   return (
     <div className="topline">
       <span className="region"><Icon name="pin" size={11} />{resort.region} · {resort.area.split(' · ')[0]}</span>
-      <button className={`refresh-btn ${refreshing ? 'loading' : ''}`} onClick={onRefresh} aria-label="刷新天气">
-        <Icon name="refresh" size={12} />
-        <span>{refreshing ? '更新中' : `更新于 ${snapshot.generatedAt.slice(11, 16)}`}</span>
-      </button>
+      <div className="topline-right">
+        <button className="poster-mini" onClick={onOpenPoster} aria-label="生成天气概览图" title="生成天气概览图">
+          <Icon name="image" size={13} />
+        </button>
+        <button className={`refresh-btn ${refreshing ? 'loading' : ''}`} onClick={onRefresh} aria-label="刷新天气">
+          <Icon name="refresh" size={12} />
+          <span>{refreshing ? '更新中' : `更新于 ${snapshot.generatedAt.slice(11, 16)}`}</span>
+        </button>
+      </div>
     </div>
   )
 }

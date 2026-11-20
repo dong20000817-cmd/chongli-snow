@@ -26,6 +26,7 @@ interface HomeProps {
   onOpenWhy: (dayIndex?: number) => void
   onOpenWind: () => void
   onOpenWeek: () => void
+  onOpenPoster: () => void
 }
 
 export function Home({
@@ -39,6 +40,7 @@ export function Home({
   onOpenWhy,
   onOpenWind,
   onOpenWeek,
+  onOpenPoster,
 }: HomeProps) {
   const dates = datesOf(resort.hourly)
   const verdictIndex = Math.min(effectiveDayIndex(snapshot), Math.max(0, dates.length - 1))
@@ -59,7 +61,7 @@ export function Home({
 
   return (
     <main className="screen home with-tabs">
-      <Topline resort={resort} snapshot={snapshot} refreshing={refreshing} onRefresh={onRefresh} />
+      <Topline resort={resort} snapshot={snapshot} refreshing={refreshing} onRefresh={onRefresh} onOpenPoster={onOpenPoster} />
       {(offline || stale) && <OfflineBanner snapshot={snapshot} error={error} stale={stale} />}
       <h1 className="resort-title">{resort.name}</h1>
       <div className="resort-sub">

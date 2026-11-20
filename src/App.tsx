@@ -16,6 +16,7 @@ import { Week } from './screens/Week'
 import { RoadScreen } from './screens/RoadScreen'
 import { SnowScreen } from './screens/SnowScreen'
 import { DevPage } from './screens/DevPage'
+import { PosterScreen } from './screens/Poster'
 
 type Sheet = null | { type: 'switch' } | { type: 'why'; day: number } | { type: 'routes' }
 
@@ -39,7 +40,13 @@ export default function App() {
   }, [snapshot])
 
   useEffect(() => {
-    if (resort) document.title = route.screen === 'dev' ? '开发者简报 · 滑雪天气通' : `${resort.short} · 滑雪天气通`
+    if (resort) {
+      document.title = route.screen === 'dev'
+        ? '开发者简报 · 滑雪天气通'
+        : route.screen === 'poster'
+          ? '天气概览图 · 滑雪天气通'
+          : `${resort.short} · 滑雪天气通`
+    }
   }, [resort, route.screen])
 
   useEffect(() => {
@@ -75,7 +82,7 @@ export default function App() {
     ? 'bg-cloud'
     : route.screen === 'snow'
       ? 'bg-snow'
-      : route.screen === 'dev'
+      : route.screen === 'dev' || route.screen === 'poster'
         ? 'bg-night'
         : backgroundClass(current)
 
@@ -84,6 +91,8 @@ export default function App() {
       <div className={`bg ${bg}`} />
       {route.screen === 'dev' ? (
         <DevPage snapshot={snapshot} resortId={resort.id} onRefresh={refresh} refreshing={status === 'refreshing'} />
+      ) : route.screen === 'poster' ? (
+        <PosterScreen snapshot={snapshot} resortId={resort.id} onBack={() => navigate('home')} />
       ) : route.screen === 'wind' ? (
         <WindDetail resort={resort} snapshot={snapshot} onBack={() => navigate('home')} offline={offline} stale={stale} error={error} />
       ) : route.screen === 'week' ? (
@@ -104,10 +113,11 @@ export default function App() {
           onOpenWhy={day => setSheet({ type: 'why', day: day ?? 0 })}
           onOpenWind={() => navigate('wind')}
           onOpenWeek={() => navigate('week')}
+          onOpenPoster={() => navigate('poster')}
         />
       )}
 
-      {route.screen !== 'dev' && (
+      {route.screen !== 'dev' && route.screen !== 'poster' && (
         <TabBar
           active={activeTab}
           onTab={onTab}

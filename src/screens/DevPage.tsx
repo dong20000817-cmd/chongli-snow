@@ -2,6 +2,9 @@ import { useMemo, useRef, useState } from 'react'
 import { toBlob } from 'html-to-image'
 import type { Snapshot } from '../lib/types'
 import { buildDigest } from '../lib/digest'
+import { buildPosterData, loadPosterSettings, posterFilename } from '../lib/poster'
+import { PosterCard } from '../components/PosterCard'
+import { exportPosterImage } from '../lib/export'
 import { SNOW_DATA, ROAD_DATA, isToday } from '../lib/status'
 import { WeatherDigestCard, SnowDigestCard, RoadDigestCard } from '../components/DigestCards'
 import { Icon } from '../components/Icons'
@@ -16,8 +19,17 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
   const weatherRef = useRef<HTMLDivElement>(null)
   const snowRef = useRef<HTMLDivElement>(null)
   const roadRef = useRef<HTMLDivElement>(null)
+  const posterRef = useRef<HTMLDivElement>(null)
   const [busy, setBusy] = useState<string | null>(null)
+  const [posterBusy, setPosterBusy] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+
+  const posterSettings = useMemo(() => loadPosterSettings(snapshot), [snapshot])
+  const posterData = useMemo(() => buildPosterData(snapshot, posterSettings), [snapshot, posterSettings])
+  const posterLayout = { grid: '双列版', list: '榜单版', single: '单雪场版' }[posterSettings.layout]
+  const thumbW = posterSettings.size === '3:4' ? 64 : 56
+  const thumbH = posterSettings.size === '3:4' ? 85 : 99
+  const posterSingle = posterData.rows.find(r => r.resort.id === resortId) ?? posterData.best
 
   const showToast = (text: string) => {
     setToast(text)
@@ -56,6 +68,20 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
     }
   }
 
+  const directSavePoster = async () => {
+    if (!posterRef.current || posterBusy) return
+    setPosterBusy(true)
+    try {
+      const result = await exportPosterImage(posterRef.current, posterFilename(posterSettings, posterData), '滑雪天气通 · 天气概览图')
+      if (result === 'shared') showToast('已打开系统分享 · 点「存储图像」进相册')
+      else if (result === 'downloaded') showToast('已下载 PNG · 可在「文件」里长按存相册')
+    } catch {
+      showToast('导出失败，请重试或截图保存')
+    } finally {
+      setPosterBusy(false)
+    }
+  }
+
   const copyText = async () => {
     try {
       await navigator.clipboard.writeText(digest.text)
@@ -79,6 +105,26 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
           <Icon name="refresh" size={12} />
           <span>{refreshing ? '更新中' : '刷新'}</span>
         </button>
+      </div>
+
+      <div className="poster-entry">
+        <div className="poster-entry-thumb" style={{ width: thumbW, height: thumbH }}>
+          <div
+            className="poster-entry-thumb-inner"
+            style={{ width: 540, height: posterSettings.size === '3:4' ? 720 : 960, transform: `scale(${thumbW / 540})` }}
+          >
+            <PosterCard data={posterData} settings={posterSettings} single={posterSingle} />
+          </div>
+        </div>
+        <div className="poster-entry-main">
+          <div className="poster-entry-kicker"><span className="new">NEW</span> 每天 07:30</div>
+          <div className="poster-entry-title">天气概览图</div>
+          <div className="poster-entry-sub">{posterLayout} · {posterSettings.size === '3:4' ? '1080×1440' : '1080×1920'} · 可微调</div>
+          <div className="poster-entry-actions">
+            <a className="primary" href={`#/poster/${resortId}`}>微调并下载</a>
+            <button onClick={directSavePoster} disabled={posterBusy}>{posterBusy ? '生成中…' : '直接保存'}</button>
+          </div>
+        </div>
       </div>
 
       <div className="list-summary" style={{ background: 'linear-gradient(135deg,rgba(10,132,255,.18),rgba(10,132,255,.04)),rgba(255,255,255,.06)', borderColor: 'rgba(10,132,255,.2)' }}>
@@ -135,6 +181,7 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
         <WeatherDigestCard ref={weatherRef} digest={digest} />
         <SnowDigestCard ref={snowRef} digest={digest} />
         <RoadDigestCard ref={roadRef} digest={digest} />
+        <PosterCard ref={posterRef} data={posterData} settings={posterSettings} single={posterSingle} />
       </div>
 
       {toast && <div className="dev-toast">{toast}</div>}

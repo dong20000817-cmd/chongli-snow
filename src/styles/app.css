@@ -48,6 +48,10 @@ img{display:block}
 
 /* ---------- common ---------- */
 .topline{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:var(--ink2)}
+.topline-right{display:flex;align-items:center;gap:9px;flex:none}
+.poster-mini{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;
+  color:rgba(255,255,255,.72);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}
+.poster-mini:active{background:rgba(255,255,255,.16);transform:scale(.95)}
 .region{display:flex;align-items:center;gap:5px}
 .pin{width:11px;height:11px;opacity:.8}
 .updated{display:flex;align-items:center;gap:5px;color:var(--ink3);font-size:11px}
@@ -450,6 +454,27 @@ body{overflow-x:hidden}
 .dev-actions{display:flex;gap:7px;margin-top:12px}
 .dev-actions button{flex:1;padding:10px;border-radius:12px;font-size:10.5px;font-weight:650;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14)}
 .dev-actions button.primary{background:rgba(10,132,255,.26);border-color:rgba(10,132,255,.34)}
+.poster-entry{position:relative;z-index:2;margin:11px 20px 0;padding:12px;display:flex;gap:12px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(10,132,255,.36),rgba(10,132,255,.08) 62%,rgba(48,209,88,.1)),rgba(255,255,255,.05);
+  border:1px solid rgba(94,176,255,.36);overflow:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.16)}
+.poster-entry:before{content:"";position:absolute;right:-40px;top:-70px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(80,180,255,.35),transparent 65%);filter:blur(8px)}
+.poster-entry-thumb{position:relative;z-index:1;width:64px;height:85px;border-radius:9px;overflow:hidden;flex:none;
+  border:1px solid rgba(255,255,255,.24);box-shadow:0 8px 18px rgba(0,0,0,.35);background:#0a2744}
+.poster-entry-thumb-inner{width:540px;height:720px;transform:scale(.11852);transform-origin:top left}
+.poster-entry-main{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column}
+.poster-entry-kicker{display:flex;align-items:center;gap:5px;font-size:8px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.62)}
+.poster-entry-kicker .new{font-size:7px;font-weight:800;letter-spacing:.06em;color:#0A2A4A;background:#8FD0FF;padding:2px 4px;border-radius:4px}
+.poster-entry-title{font-size:17px;font-weight:740;letter-spacing:-.3px;margin-top:3px}
+.poster-entry-sub{font-size:8.5px;line-height:1.45;color:rgba(255,255,255,.58);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.poster-entry-actions{display:flex;gap:5px;margin-top:auto;padding-top:6px}
+.poster-entry-actions a,.poster-entry-actions button{height:27px;border-radius:8px;font-size:9px;font-weight:650;padding:0 10px;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center}
+.poster-entry-actions .primary{flex:1.35;background:linear-gradient(180deg,#4CA4FF,#0A84FF);box-shadow:0 4px 12px rgba(10,132,255,.3),inset 0 1px 0 rgba(255,255,255,.28);color:#fff}
+.poster-entry-actions button{flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);color:#fff}
+.poster-entry-actions button:disabled{opacity:.6}
+
 .digest-section{margin-top:15px}
 .digest-section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
 .digest-section-head h2{font-size:13px;font-weight:680;margin:0}

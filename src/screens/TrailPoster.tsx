@@ -96,6 +96,17 @@ export function TrailPosterScreen({ snapshot, onBack }: { snapshot: Snapshot; on
         </button>
       </div>
 
+      <div className="tp-controls">
+        <div className="tp-seg">
+          {(['3:4', '9:16'] as const).map(s => (
+            <button key={s} className={size === s ? 'on' : ''} onClick={() => setSize(s)}>
+              {s === '3:4' ? '3:4 · 1080×1440' : '9:16 · 1080×1920'}
+            </button>
+          ))}
+        </div>
+        <a className="tp-edit" href="#/trails">继续录入 →</a>
+      </div>
+
       <div className="tp-preview" ref={wrapRef}>
         <div className="tp-frame" style={{ width: cardW * scale, height: cardH * scale }}>
           <div className="tp-scale" style={{ transform: `scale(${scale})` }}>
@@ -112,17 +123,6 @@ export function TrailPosterScreen({ snapshot, onBack }: { snapshot: Snapshot; on
             <b>{digest.totals[s]}</b>
           </div>
         ))}
-      </div>
-
-      <div className="tp-controls">
-        <div className="tp-seg">
-          {(['3:4', '9:16'] as const).map(s => (
-            <button key={s} className={size === s ? 'on' : ''} onClick={() => setSize(s)}>
-              {s === '3:4' ? '3:4 · 1080×1440' : '9:16 · 1080×1920'}
-            </button>
-          ))}
-        </div>
-        <a className="tp-edit" href="#/trails">继续录入 →</a>
       </div>
 
       {!digest.anyMarks && (

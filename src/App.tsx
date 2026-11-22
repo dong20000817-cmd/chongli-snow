@@ -17,6 +17,8 @@ import { RoadScreen } from './screens/RoadScreen'
 import { SnowScreen } from './screens/SnowScreen'
 import { DevPage } from './screens/DevPage'
 import { PosterScreen } from './screens/Poster'
+import { TrailsScreen } from './screens/Trails'
+import { TrailPosterScreen } from './screens/TrailPoster'
 
 type Sheet = null | { type: 'switch' } | { type: 'why'; day: number } | { type: 'routes' }
 
@@ -45,7 +47,11 @@ export default function App() {
         ? '开发者简报 · 滑雪天气通'
         : route.screen === 'poster'
           ? '天气概览图 · 滑雪天气通'
-          : `${resort.short} · 滑雪天气通`
+          : route.screen === 'trails'
+            ? '雪道情报录入 · 滑雪天气通'
+            : route.screen === 'trailposter'
+              ? '雪道情报图 · 滑雪天气通'
+              : `${resort.short} · 滑雪天气通`
     }
   }, [resort, route.screen])
 
@@ -82,7 +88,7 @@ export default function App() {
     ? 'bg-cloud'
     : route.screen === 'snow'
       ? 'bg-snow'
-      : route.screen === 'dev' || route.screen === 'poster'
+      : route.screen === 'dev' || route.screen === 'poster' || route.screen === 'trails' || route.screen === 'trailposter'
         ? 'bg-night'
         : backgroundClass(current)
 
@@ -93,6 +99,10 @@ export default function App() {
         <DevPage snapshot={snapshot} resortId={resort.id} onRefresh={refresh} refreshing={status === 'refreshing'} />
       ) : route.screen === 'poster' ? (
         <PosterScreen snapshot={snapshot} resortId={resort.id} onBack={() => navigate('home')} />
+      ) : route.screen === 'trails' ? (
+        <TrailsScreen snapshot={snapshot} resortId={resort.id} />
+      ) : route.screen === 'trailposter' ? (
+        <TrailPosterScreen snapshot={snapshot} onBack={() => navigate('trails', resort.id)} />
       ) : route.screen === 'wind' ? (
         <WindDetail resort={resort} snapshot={snapshot} onBack={() => navigate('home')} offline={offline} stale={stale} error={error} />
       ) : route.screen === 'week' ? (
@@ -117,7 +127,7 @@ export default function App() {
         />
       )}
 
-      {route.screen !== 'dev' && route.screen !== 'poster' && (
+      {route.screen !== 'dev' && route.screen !== 'poster' && route.screen !== 'trails' && route.screen !== 'trailposter' && (
         <TabBar
           active={activeTab}
           onTab={onTab}

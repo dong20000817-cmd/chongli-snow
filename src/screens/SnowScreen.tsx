@@ -1,111 +1,175 @@
 import { useEffect, useState } from 'react'
 import type { ResortForecast } from '../lib/types'
-import { CATEGORY_COLOR, SNOW_DATA, isToday, type CategoryId, type SnowCategory, type SnowTrail } from '../lib/status'
 import { Icon } from '../components/Icons'
+import {
+  GRADE_META,
+  STATUS_META,
+  STATUS_ORDER,
+  TRAILS,
+  blankCounts,
+  isSkiable,
+  loadBook,
+  trailByGrade,
+  trailLen,
+  type Grade,
+  type TrailDay,
+  type TrailStatus,
+} from '../lib/trails'
 
-type Filter = 'all' | CategoryId
+type Filter = 'all' | Grade
 
-function statusLabel(t: SnowTrail): { label: string; cls: string } {
-  const s = t.status ?? 'open'
-  if (s === 'open') return { label: '开放', cls: 'open' }
-  if (s === 'expected') return { label: '预计', cls: 'expected' }
-  return { label: '关闭', cls: 'closed' }
-}
-
-function TrailRow({ cat, trail }: { cat: SnowCategory; trail: SnowTrail }) {
-  const st = statusLabel(trail)
+function statusPill(status: TrailStatus | undefined) {
+  if (!status) return <span className="tr-status">未标</span>
+  const m = STATUS_META[status]
   return (
-    <div className="trail-row">
-      <span className="trail-color" style={{ background: CATEGORY_COLOR[cat.id] }} />
-      <div className="trail-main">
-        <div className="trail-name">{trail.name}</div>
-        <div className="trail-meta">{trail.len} · {trail.note}</div>
-      </div>
-      <span className={`status ${st.cls}`}>{st.label}</span>
-    </div>
-  )
-}
-
-function CategorySection({ cat }: { cat: SnowCategory }) {
-  const color = CATEGORY_COLOR[cat.id]
-  return (
-    <section className="cat-section">
-      <div className="cat-head">
-        <div className="cat-title"><span className="dot" style={{ background: color }} />{cat.name}<small>{cat.sub}</small></div>
-        <span className="cat-count" style={{ color, background: `${color}1f`, border: `1px solid ${color}33` }}>{cat.open} / {cat.total} 开放</span>
-      </div>
-      <div className="cat-desc">{cat.desc}</div>
-      <div className="trail-list">{cat.trails.map(t => <TrailRow key={t.name} cat={cat} trail={t} />)}</div>
-      <div className="cat-foot">
-        <span>{cat.open === 0 ? '当前无开放雪道' : '以上为开放雪道'}</span>
-        <span>另有 <b>{cat.total - cat.open}</b> 条关闭 · 查看全部 <Icon name="chevron" size={9} /></span>
-      </div>
-    </section>
+    <span className="tr-status" style={{ color: m.color, background: `${m.color}1c`, border: `1px solid ${m.color}33` }}>
+      {m.label}
+    </span>
   )
 }
 
 export function SnowScreen({ resort, today }: { resort: ResortForecast; today: string }) {
-  const data = SNOW_DATA.resorts[resort.id]
+  const data = TRAILS.resorts[resort.id]
+  const [day, setDay] = useState<TrailDay | null>(null)
   const [filter, setFilter] = useState<Filter>('all')
-  useEffect(() => setFilter('all'), [resort.id])
+
+  useEffect(() => {
+    setDay(loadBook(today).day)
+    setFilter('all')
+  }, [today, resort.id])
+
   if (!data) {
     return (
       <main className="screen with-tabs">
         <div className="page-head"><span className="left"><Icon name="pin" size={11} />{resort.region} · {resort.area.split(' · ')[0]}</span><span className="right">暂无数据</span></div>
         <div className="page-title">雪道开放</div>
-        <div className="page-sub">{resort.name} · 雪道状态待更新</div>
-        <div className="cat-section" style={{ marginTop: 16, padding: 16 }}>
-          <div className="cat-desc" style={{ padding: 0 }}>该雪场今天还没有录入雪道开放数据。请以雪场官方公众号/公告为准。</div>
-        </div>
+        <div className="page-sub">{resort.name} · 雪道清单待补充</div>
       </main>
     )
   }
-  const cats = filter === 'all' ? data.categories : data.categories.filter(c => c.id === filter)
+
+  const marks = day?.marks[resort.id] ?? {}
+  const sections = trailByGrade(resort.id)
+  const counts = blankCounts()
+  for (const s of Object.values(marks)) counts[s] += 1
+  const marked = Object.keys(marks).length
+  const skiable = STATUS_ORDER.filter(s => isSkiable(s)).reduce((n, s) => n + counts[s], 0)
+  const total = data.trails.length
+  const visible = filter === 'all' ? sections : sections.filter(s => s.grade === filter)
+  const tomorrow = data.trails.filter(t => marks[t.name] === 'tomorrow')
+  const flagged = data.trails.filter(t => ['snow', 'training', 'closed'].includes(marks[t.name] ?? ''))
+
   return (
     <main className="screen with-tabs">
       <div className="page-head">
         <span className="left"><Icon name="pin" size={11} />{resort.region} · {resort.area.split(' · ')[0]}</span>
-        <span className="right"><Icon name="refresh" size={11} />更新于 {data.updatedAt}</span>
+        <span className="right"><Icon name="clock" size={11} />{day?.updatedAt ? `录入 ${day.updatedAt.slice(11, 16)}` : '今日未录入'}</span>
       </div>
       <div className="page-title">雪道开放</div>
       <div className="page-sub">
-        {data.name} · 官方公众号 {data.sourceTime} 更新
-        {SNOW_DATA.isDemo && <span className="demo-pill">示例数据</span>}
-        {!isToday(SNOW_DATA.updatedAt, today) && <span className="demo-pill" style={{ color: '#FFB3AD', background: 'rgba(255,69,58,.12)', borderColor: 'rgba(255,69,58,.22)' }}>非今日数据</span>}
+        {data.name} · {TRAILS.season} 雪道图 {total} 条
+        <span className="demo-pill" style={marked ? { color: '#8EE6A8', background: 'rgba(48,209,88,.12)', borderColor: 'rgba(48,209,88,.24)' } : undefined}>
+          {marked ? '人工录入' : '待录入'}
+        </span>
       </div>
 
-      <div className="list-summary">
+      <div className="list-summary" style={{ borderColor: marked ? 'rgba(0,229,192,.26)' : 'rgba(255,255,255,.14)', background: marked ? 'linear-gradient(135deg,rgba(0,229,192,.16),rgba(0,229,192,.03)),rgba(255,255,255,.065)' : 'rgba(255,255,255,.06)' }}>
         <div className="top">
-          <div><div className="k">今日开放</div><div className="big">{data.open}<small>/ {data.total} 条</small></div></div>
-          <div className="summary-side"><b>缆车 {data.liftsOpen} / {data.liftsTotal}</b>今日新增 {data.todayNew} 条<br />预计明天 +{data.tomorrowExpected}</div>
+          <div>
+            <div className="k">{marked ? '今日可滑（含补雪/训练）' : '今日尚未录入'}</div>
+            <div className="big">{marked ? skiable : '—'}<small>/ {total} 条</small></div>
+          </div>
+          <div className="summary-side">
+            <b>新开 {counts.new}</b>
+            明日 {counts.tomorrow}<br />
+            补雪 {counts.snow} · 训练 {counts.training}<br />
+            临时关闭 {counts.closed}
+          </div>
         </div>
-        <div className="desc">{data.summary}</div>
-        <div className="meta">开放雪道 <b>{data.open}</b> 条 · 关闭 <b>{data.total - data.open}</b> 条 · 数据来自官方公众号</div>
+        <div className="desc">
+          {marked
+            ? `已标注 ${marked} / ${total} 条。${counts.closed ? `临时关闭 ${counts.closed} 条，` : ''}${counts.snow ? `补雪 ${counts.snow} 条，` : ''}雪况与开放时间以雪场当日公告为准。`
+            : '今天还没有录入。建议先点「全部开放」，再把补雪、训练、临时关闭的雪道点掉，一家 30 秒。'}
+        </div>
+        <div className="meta">人工标注 · 不是官方实时 API · 共 <b>{total}</b> 条雪道</div>
+        <a className="snow-cta" href={`#/trails/${resort.id}`}>{marked ? '继续录入 / 修改' : '去录入今天的雪道'} <Icon name="chevron" size={10} /></a>
       </div>
 
       <div className="filter-row">
-        <button className={`filter${filter === 'all' ? ' on' : ''}`} onClick={() => setFilter('all')}>全部<b>{data.open}/{data.total}</b></button>
-        {data.categories.map(c => (
-          <button key={c.id} className={`filter${filter === c.id ? ' on' : ''}`} onClick={() => setFilter(c.id)}>
-            <span className="fd" style={{ background: CATEGORY_COLOR[c.id] }} />{c.name}<b>{c.open}/{c.total}</b>
-          </button>
-        ))}
+        <button className={`filter${filter === 'all' ? ' on' : ''}`} onClick={() => setFilter('all')}>全部<b>{skiable}/{total}</b></button>
+        {sections.map(s => {
+          const open = s.trails.filter(t => marks[t.name] && isSkiable(marks[t.name]!)).length
+          return (
+            <button key={s.grade} className={`filter${filter === s.grade ? ' on' : ''}`} onClick={() => setFilter(s.grade)}>
+              <span className="fd" style={{ background: GRADE_META[s.grade].color }} />{GRADE_META[s.grade].label}<b>{open}/{s.trails.length}</b>
+            </button>
+          )
+        })}
       </div>
 
-      {cats.map(c => <CategorySection key={c.id} cat={c} />)}
+      {visible.map(section => {
+        const color = GRADE_META[section.grade].color
+        const open = section.trails.filter(t => marks[t.name] && isSkiable(marks[t.name]!)).length
+        return (
+          <section className="cat-section" key={section.grade}>
+            <div className="cat-head">
+              <div className="cat-title"><span className="dot" style={{ background: color }} />{GRADE_META[section.grade].label}<small>{GRADE_META[section.grade].sub}</small></div>
+              <span className="cat-count" style={{ color, background: `${color}1f`, border: `1px solid ${color}33` }}>{open} / {section.trails.length} 可滑</span>
+            </div>
+            <div className="trail-list">
+              {section.trails.map(t => {
+                const st = marks[t.name]
+                return (
+                  <div className="trail-row" key={t.name}>
+                    <span className="trail-color" style={{ background: color }} />
+                    <div className="trail-main">
+                      <div className="trail-name">{t.name}</div>
+                      <div className="trail-meta">{[trailLen(t.len), t.note].filter(Boolean).join(' · ') || '—'}</div>
+                    </div>
+                    {statusPill(st)}
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )
+      })}
 
-      <div className="future-card">
-        <div className="future-head">未来 3 天预计 <span>以官方当日公告为准</span></div>
-        <div className="future-row">
-          {data.future.map(f => (
-            <div className="future-day" key={f.label}><small>{f.label}</small><b>+{f.count} 条 <span>{f.note}</span></b></div>
-          ))}
+      {tomorrow.length > 0 && (
+        <div className="future-card">
+          <div className="future-head">明日预计开放 <span>共 {tomorrow.length} 条 · 明天自动顺延为“新开”</span></div>
+          <div className="future-row" style={{ flexWrap: 'wrap' }}>
+            {tomorrow.map(t => (
+              <div className="future-day" key={t.name} style={{ flex: '0 0 auto', minWidth: 78 }}>
+                <small>{GRADE_META[t.grade].label}</small>
+                <b style={{ fontSize: 12 }}>{t.name}</b>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {flagged.length > 0 && (
+        <div className="future-card">
+          <div className="future-head">今日提醒 <span>补雪 / 训练 / 临时关闭</span></div>
+          <div className="future-row" style={{ flexWrap: 'wrap' }}>
+            {flagged.map(t => {
+              const m = STATUS_META[marks[t.name]!]
+              return (
+                <div className="future-day" key={t.name} style={{ flex: '0 0 auto', minWidth: 78 }}>
+                  <small style={{ color: m.color }}>{m.label}</small>
+                  <b style={{ fontSize: 12 }}>{t.name}</b>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="source-line">
-        状态来自 {data.source} · {data.sourceTime} 的人工整理，非官方实时 API；预计开放时间可能因天气、造雪、赛事调整。<br />
-        公众号原文、雪道长度和难度以雪场发布为准。
+        雪道清单来自 <b>{data.source}</b>（{TRAILS.season} 雪季，{total} 条{data.planned > total ? `，规划 ${data.planned} 条` : ''}）；开放状态是你在 App 里手动标注的，不是官方实时接口。<br />
+        {data.note}
+        <a className="dev-link" href={`#/trails/${resort.id}`}>去录入</a>
         <a className="dev-link" href="#/dev">开发者</a>
       </div>
     </main>

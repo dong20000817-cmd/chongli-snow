@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import type { DigestData } from '../lib/digest'
 import { weatherMeta } from '../lib/digest'
 import { TIERS } from '../lib/recommend'
-import { SNOW_DATA, ROAD_DATA, roadStateColor } from '../lib/status'
+import { ROAD_DATA, roadStateColor } from '../lib/status'
 import { rgba } from '../lib/format'
 
 function Head({ date }: { date: string }) {
@@ -51,21 +51,22 @@ export const SnowDigestCard = forwardRef<HTMLDivElement, { digest: DigestData }>
   const expected = digest.snow.filter(x => x.type === 'expected').slice(0, 2)
   const closed = digest.snow.filter(x => x.type === 'closed').slice(0, 1)
   const highlights = [...opened, ...expected, ...closed]
-  const top = ['wanlong', 'genting', 'thaiwoo'].map(id => ({ id, d: SNOW_DATA.resorts[id] })).filter(x => x.d)
+  const top = digest.snowTotals
   return (
     <div ref={ref} className="digest-card snow">
       <Head date={digest.dateLabel} />
-      <div className="dc-card-title">{digest.isTomorrow ? '明日' : '今日'}雪道速报</div>
+      <div className="dc-card-title">今日雪道速报</div>
       <div className="dc-card-sub">新增开放 · 临时关闭 · 预计开放</div>
       <div className="dc-summary-strip">
-        {top.map(({ id, d }) => (
-          <div className="dc-summary-cell" key={id}>
+        {top.map(d => (
+          <div className="dc-summary-cell" key={d.id}>
             <small>{d.short}</small>
-            <b>{d.open}<span style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', fontWeight: 400 }}> / {d.total}</span></b>
+            <b>{d.marked ? d.open : '—'}<span style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', fontWeight: 400 }}> / {d.total}</span></b>
           </div>
         ))}
       </div>
       <div className="dc-change-list">
+        {!highlights.length && <div className="dc-empty">今天还没录入雪道 · 去 #/trails 标一下</div>}
         {highlights.map((h, i) => {
           const color = h.type === 'open' ? '#30D158' : h.type === 'expected' ? '#0A84FF' : '#FF9F0A'
           const kind = h.type === 'open' ? '新开' : h.type === 'expected' ? '预计' : '关闭'
@@ -78,7 +79,7 @@ export const SnowDigestCard = forwardRef<HTMLDivElement, { digest: DigestData }>
           )
         })}
       </div>
-      <Foot left={`${SNOW_DATA.isDemo ? '演示数据 · ' : ''}官方公众号人工整理`} right={`数据 ${SNOW_DATA.updatedAt.slice(5, 10).replace('-', '/')} ${SNOW_DATA.updatedAt.slice(11, 16)}`} />
+      <Foot left={digest.hasSnow ? '人工录入 · 以雪场公告为准' : '今日未录入'} right={digest.snowTime ? `录入 ${digest.snowTime}` : ''} />
     </div>
   )
 })

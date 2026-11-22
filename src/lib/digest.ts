@@ -3,7 +3,9 @@ import { dailyFor, dailyScore, TIERS } from './recommend'
 import { dayLabel, datesOf, effectiveDayIndex } from './time'
 import { windLevel } from './wind'
 import { fmtVis, tempShort } from './format'
-import { ROAD_DATA, SNOW_DATA, roadStateColor, timeOf } from './status'
+import { ROAD_DATA, roadStateColor, timeOf } from './status'
+import { RESORTS } from '../data/resorts'
+import { TRAILS, countStatuses, markedCount, type TrailDay } from './trails'
 
 export interface WeatherDigestRow {
   resort: ResortForecast
@@ -18,17 +20,28 @@ export interface SnowHighlight {
   text: string
 }
 
+export interface SnowDigestTotal {
+  id: string
+  short: string
+  open: number
+  total: number
+  marked: boolean
+}
+
 export interface DigestData {
   date: string
   dateLabel: string
   isTomorrow: boolean
   weather: WeatherDigestRow[]
   snow: SnowHighlight[]
+  snowTotals: SnowDigestTotal[]
+  snowTime: string
+  hasSnow: boolean
   road: typeof ROAD_DATA
   text: string
 }
 
-export function buildDigest(snapshot: Snapshot): DigestData {
+export function buildDigest(snapshot: Snapshot, day?: TrailDay): DigestData {
   const idx = effectiveDayIndex(snapshot)
   const resorts = Object.values(snapshot.resorts)
   const weather = resorts
@@ -40,18 +53,49 @@ export function buildDigest(snapshot: Snapshot): DigestData {
     .sort((a, b) => b.score - a.score)
 
   const snow: SnowHighlight[] = []
-  for (const [id, data] of Object.entries(SNOW_DATA.resorts)) {
-    for (const c of data.changes) {
-      snow.push({ resort: data.short, resortId: id, type: c.type, text: c.text })
+  const snowTotals: SnowDigestTotal[] = []
+  if (day) {
+    for (const meta of RESORTS) {
+      const data = TRAILS.resorts[meta.id]
+      if (!data) continue
+      const marks = day.marks[meta.id] ?? {}
+      const counts = countStatuses(day, meta.id)
+      const namesOf = (status: string) => Object.entries(marks).filter(([, s]) => s === status).map(([n]) => n)
+      const fresh = namesOf('new')
+      const expect = namesOf('tomorrow')
+      const closed = namesOf('closed')
+      if (fresh.length) snow.push({ resort: meta.short, resortId: meta.id, type: 'open', text: `新增 ${fresh.slice(0, 4).join('、')}${fresh.length > 4 ? ` 等 ${fresh.length} 条` : ''}开放` })
+      if (expect.length) snow.push({ resort: meta.short, resortId: meta.id, type: 'expected', text: `${expect.slice(0, 4).join('、')}${expect.length > 4 ? ` 等 ${expect.length} 条` : ''}预计明日开放` })
+      if (closed.length) snow.push({ resort: meta.short, resortId: meta.id, type: 'closed', text: `${closed.slice(0, 4).join('、')}${closed.length > 4 ? ` 等 ${closed.length} 条` : ''}临时关闭` })
+      if (snowTotals.length < 3) {
+        snowTotals.push({
+          id: meta.id,
+          short: meta.short,
+          open: (['open', 'new', 'snow', 'training'] as const).reduce((n, k) => n + counts[k], 0),
+          total: data.trails.length,
+          marked: markedCount(day, meta.id) > 0,
+        })
+      }
     }
+    const order = { open: 0, expected: 1, closed: 2 }
+    snow.sort((a, b) => order[a.type] - order[b.type])
   }
-  const order = { open: 0, expected: 1, closed: 2 }
-  snow.sort((a, b) => order[a.type] - order[b.type])
 
   const date = weather[0]?.daily.date ?? snapshot.today
   const dateLabel = `${date.slice(5).replace('-', '/')} ${dayLabel(date, idx)}`
   const text = buildText(dateLabel, weather, snow)
-  return { date, dateLabel, isTomorrow: idx === 1, weather, snow, road: ROAD_DATA, text }
+  return {
+    date,
+    dateLabel,
+    isTomorrow: idx === 1,
+    weather,
+    snow,
+    snowTotals,
+    snowTime: day?.updatedAt ? timeOf(day.updatedAt) : '',
+    hasSnow: Boolean(day && day.updatedAt),
+    road: ROAD_DATA,
+    text,
+  }
 }
 
 export function weatherMeta(row: WeatherDigestRow): string {
@@ -74,7 +118,7 @@ function buildText(dateLabel: string, weather: WeatherDigestRow[], snow: SnowHig
     `【雪道】${snowText || '今日暂无新增开放/关闭记录'}。`,
     `【路况】${roadText}。`,
     '',
-    '天气数据：Open-Meteo · 雪道/路况为官方公众号及公开信息人工整理 · 以官方为准',
+    '天气数据：Open-Meteo · 雪道为 App 内人工标注 · 路况为公开信息人工整理 · 以官方为准',
     '#崇礼滑雪 #滑雪天气通 #万龙滑雪场 #滑雪攻略',
   ].join('\n')
 }
@@ -85,8 +129,4 @@ export function roadColor(key: string): string {
 
 export function roadUpdated(): string {
   return timeOf(ROAD_DATA.updatedAt)
-}
-
-export function snowUpdated(): string {
-  return timeOf(SNOW_DATA.updatedAt)
 }

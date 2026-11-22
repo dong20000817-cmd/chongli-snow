@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { RESORTS, DEFAULT_RESORT_ID } from '../data/resorts'
 
-export type Screen = 'home' | 'wind' | 'week' | 'road' | 'snow' | 'dev' | 'poster'
+export type Screen = 'home' | 'wind' | 'week' | 'road' | 'snow' | 'dev' | 'poster' | 'trails' | 'trailposter'
 
 export interface Route {
   screen: Screen
   resortId: string
 }
 
-const SCREENS: Screen[] = ['home', 'wind', 'week', 'road', 'snow', 'dev', 'poster']
+const SCREENS: Screen[] = ['home', 'wind', 'week', 'road', 'snow', 'dev', 'poster', 'trails', 'trailposter']
 const IDS = new Set(RESORTS.map(r => r.id))
 
 export function parseHash(): Route {

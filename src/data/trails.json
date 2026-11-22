@@ -26,193 +26,225 @@
           "name": "长龙道",
           "grade": "green",
           "len": 4.16,
-          "note": "最长初级道"
+          "note": "最长初级道",
+          "level": "初级"
         },
         {
           "name": "短龙道",
           "grade": "green",
           "len": 0.8,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "卧龙道",
           "grade": "green",
           "len": 0.3,
-          "note": "魔毯区"
+          "note": "魔毯区",
+          "level": "初级"
         },
         {
           "name": "娇龙道",
           "grade": "green",
           "len": 0.7,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "游龙道",
           "grade": "blue",
           "len": 3.5,
-          "note": "长中级"
+          "note": "长中级",
+          "level": "中级"
         },
         {
           "name": "玉龙道",
           "grade": "blue",
           "len": 2.5,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "飞龙道",
           "grade": "blue",
           "len": 1.3,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "小龙道",
           "grade": "blue",
           "len": 0.6,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "酷龙道",
           "grade": "blue",
           "len": 0.799,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "银龙道",
           "grade": "blue",
           "len": 1.3,
-          "note": "末端接大奔头"
+          "note": "末端接大奔头",
+          "level": "中级"
         },
         {
           "name": "雨龙道",
           "grade": "blue",
           "len": 0.85,
-          "note": ""
+          "note": "雨龙 · 蓝道",
+          "level": "中级"
         },
         {
           "name": "紫龙道",
           "grade": "blue",
           "len": 0.7,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "五彩龙道",
           "grade": "blue",
           "len": 1.8,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "中华龙道",
           "grade": "black",
           "len": 3.0,
-          "note": "3 km 长高级"
+          "note": "3 km 长高级",
+          "level": "高级"
         },
         {
           "name": "金龙道",
           "grade": "black",
           "len": 1.9,
-          "note": "FIS 认证"
+          "note": "FIS 认证",
+          "level": "高级"
         },
         {
           "name": "恐龙道",
           "grade": "black",
           "len": 1.1,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "翔龙道",
           "grade": "black",
           "len": 0.9,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "炫龙道",
           "grade": "black",
           "len": 1.9,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "猛龙道",
           "grade": "black",
           "len": 1.8,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "大奔头",
           "grade": "black",
           "len": 0.4,
-          "note": "猫跳 · 最陡"
+          "note": "猫跳 · 最陡",
+          "level": "高级"
         },
         {
           "name": "威龙道",
           "grade": "black",
           "len": 2.0,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "腾龙道",
           "grade": "black",
           "len": 1.9,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "逸龙道",
           "grade": "black",
           "len": 0.65,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "海龙道",
           "grade": "black",
           "len": 1.88,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "雾龙道",
           "grade": "black",
           "len": 0.4,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "霜龙道",
           "grade": "black",
           "len": 0.65,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "雪龙道",
           "grade": "black",
           "len": 0.55,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "风龙道",
           "grade": "black",
           "len": 2.6,
-          "note": "最陡 27°"
+          "note": "最陡 27°",
+          "level": "高级"
         },
         {
           "name": "云龙道",
           "grade": "black",
           "len": 2.2,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "绿龙道",
           "grade": "black",
           "len": 1.8,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "赤龙道",
           "grade": "black",
           "len": 0.2,
-          "note": "短陡"
+          "note": "短陡",
+          "level": "高级"
         },
         {
           "name": "黄龙道",
           "grade": "black",
           "len": 0.85,
-          "note": ""
+          "note": "",
+          "level": "高级"
         }
       ]
     },
@@ -228,193 +260,225 @@
           "name": "锦带花",
           "grade": "green",
           "len": 0.775,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "雪绒花",
           "grade": "green",
           "len": 0.631,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "风铃草",
           "grade": "green",
           "len": 0.952,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "曼陀罗",
           "grade": "blue",
           "len": 2.094,
-          "note": "最长中级"
+          "note": "最长中级",
+          "level": "中级"
         },
         {
           "name": "玉竹",
           "grade": "blue",
           "len": 0.881,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "花锚",
           "grade": "blue",
           "len": 1.296,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "田旋花",
           "grade": "blue",
           "len": 0.749,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "柳兰",
           "grade": "blue",
           "len": 0.399,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "剪秋萝",
           "grade": "blue",
           "len": 0.313,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "芍药花",
           "grade": "blue",
           "len": 2.032,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "薰衣草",
           "grade": "blue",
           "len": 1.721,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "紫丁香",
           "grade": "blue",
           "len": 0.786,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "翠菊花",
           "grade": "blue",
           "len": 0.396,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "山丹丹",
           "grade": "blue",
           "len": 0.602,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "花苜蓿",
           "grade": "blue",
           "len": 0.489,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "向日葵",
           "grade": "blue",
           "len": 0.712,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "水杨梅",
           "grade": "blue",
           "len": 0.302,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "百里香",
           "grade": "blue",
           "len": 1.906,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "布勒道",
           "grade": "blue",
           "len": 0.505,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "野罂粟",
           "grade": "black",
           "len": 0.603,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "蒲公英",
           "grade": "black",
           "len": 1.524,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "金莲花",
           "grade": "black",
           "len": 0.72,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "银莲花",
           "grade": "black",
           "len": 0.67,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "野玫瑰",
           "grade": "black",
           "len": 1.321,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "狼毒花",
           "grade": "black",
           "len": 0.473,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "铁线莲",
           "grade": "black",
           "len": 0.463,
-          "note": "37° 陡"
+          "note": "37° 陡",
+          "level": "高级"
         },
         {
           "name": "凤仙花",
           "grade": "black",
           "len": 0.54,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "太浩岩壁",
           "grade": "black",
           "len": 1.468,
-          "note": "岩壁地形"
+          "note": "岩壁地形",
+          "level": "高级"
         },
         {
           "name": "蓝刺头",
           "grade": "black",
           "len": 0.465,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "野蔷薇",
           "grade": "black",
           "len": 0.906,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "天仙子",
           "grade": "black",
           "len": 0.474,
-          "note": "38° 最陡"
+          "note": "38° 最陡",
+          "level": "高级"
         },
         {
           "name": "白芷花",
           "grade": "black",
           "len": 0.865,
-          "note": ""
+          "note": "",
+          "level": "高级"
         }
       ]
     },
@@ -430,133 +494,155 @@
           "name": "3-狐步",
           "grade": "green",
           "len": 0.553,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "8-曳步",
           "grade": "green",
           "len": 0.51,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "8A",
           "grade": "green",
           "len": 0.648,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "9D-恰恰",
           "grade": "green",
           "len": 0.347,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "9E-啪啦啪啦",
           "grade": "green",
           "len": 0.975,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "4B-波尔卡",
-          "grade": "blue",
+          "grade": "black",
           "len": 0.51,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "4C-华尔兹",
           "grade": "blue",
           "len": 1.392,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "4D-康康",
           "grade": "blue",
           "len": 0.407,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "4E-自由",
           "grade": "blue",
           "len": 0.939,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "4F-吉特巴",
           "grade": "blue",
           "len": 0.512,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "4I-迪斯科",
-          "grade": "blue",
+          "grade": "black",
           "len": 0.392,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "4J-莎萨",
           "grade": "blue",
           "len": 2.086,
-          "note": "最长"
+          "note": "最长",
+          "level": "中级"
         },
         {
           "name": "7号道",
           "grade": "blue",
           "len": 0.526,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "9A-摇摆",
           "grade": "blue",
           "len": 0.81,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "9B-坤比亚",
           "grade": "blue",
           "len": 0.203,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "9C-芭蕾",
           "grade": "blue",
           "len": 0.945,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "4A-伦巴",
           "grade": "black",
           "len": 0.966,
-          "note": "27.9° 最陡"
+          "note": "27.9° 最陡",
+          "level": "高级"
         },
         {
           "name": "4G-兰巴达",
           "grade": "black",
           "len": 0.519,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "10A-巴洛克",
           "grade": "black",
           "len": 0.55,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "10B-桑巴",
           "grade": "black",
           "len": 0.684,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "10C-曼波",
           "grade": "black",
           "len": 0.618,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "10D-现代舞",
-          "grade": "black",
+          "grade": "double",
           "len": 0.716,
-          "note": ""
+          "note": "",
+          "level": "双黑（专业道）"
         }
       ]
     },
@@ -572,199 +658,232 @@
           "name": "A1-蓝调",
           "grade": "green",
           "len": 0.173,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "A2-管弦",
           "grade": "green",
           "len": 0.173,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "A3-民谣",
           "grade": "green",
           "len": 0.188,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "A5-灵魂",
           "grade": "green",
           "len": 0.188,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "A6-新世纪",
           "grade": "green",
           "len": 0.18,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "C3-流行",
           "grade": "green",
           "len": 1.23,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "D1-咏叹",
           "grade": "green",
           "len": 0.0,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "D2-自赏",
           "grade": "green",
           "len": 0.0,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B2-交响",
           "grade": "blue",
           "len": 1.83,
-          "note": "初中级道"
+          "note": "初中级道",
+          "level": "初中级"
         },
         {
           "name": "A9-嘻哈",
           "grade": "blue",
           "len": 0.64,
-          "note": "地形公园"
+          "note": "地形公园",
+          "level": "公园"
         },
         {
           "name": "A10-古典",
           "grade": "blue",
           "len": 0.71,
-          "note": "地形公园"
+          "note": "地形公园",
+          "level": "公园"
         },
         {
           "name": "A7-节奏布鲁斯",
           "grade": "blue",
           "len": 0.579,
-          "note": ""
+          "note": "MOGUL",
+          "level": "中级"
         },
         {
           "name": "A8-浩室",
           "grade": "blue",
           "len": 0.422,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B9-摇摆",
-          "grade": "blue",
+          "grade": "black",
           "len": 1.437,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "B10-阿卡贝拉",
           "grade": "blue",
           "len": 1.692,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B11-萨尔萨",
           "grade": "blue",
           "len": 0.74,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C8-约德尔",
           "grade": "blue",
           "len": 0.192,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B6-乡村",
           "grade": "black",
           "len": 1.084,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "B8-放克",
           "grade": "black",
           "len": 1.458,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "C1-朋克",
           "grade": "black",
           "len": 0.608,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "C2-爵士",
           "grade": "black",
           "len": 0.466,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "C7-拉丁",
           "grade": "black",
           "len": 0.971,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "C9-波普",
           "grade": "black",
           "len": 0.831,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "C10-都市",
           "grade": "black",
           "len": 0.867,
-          "note": ""
+          "note": "",
+          "level": "中高级"
         },
         {
           "name": "B1-摇滚",
           "grade": "black",
           "len": 1.557,
-          "note": ""
+          "note": "竞技道",
+          "level": "高级"
         },
         {
           "name": "B3-丛林",
           "grade": "black",
           "len": 1.457,
-          "note": ""
+          "note": "竞技道",
+          "level": "高级"
         },
         {
           "name": "B5-说唱",
           "grade": "black",
           "len": 1.226,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "B7-电子",
           "grade": "black",
           "len": 1.355,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "B12-伦巴",
           "grade": "black",
           "len": 0.966,
-          "note": ""
+          "note": "竞技道",
+          "level": "高级"
         },
         {
           "name": "B13-打击乐",
           "grade": "black",
           "len": 0.938,
-          "note": "30° 最陡"
+          "note": "30° 最陡 · 竞技道",
+          "level": "高级"
         },
         {
           "name": "B15-金属",
           "grade": "black",
           "len": 0.125,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "C5-雷鬼",
           "grade": "black",
           "len": 0.553,
-          "note": ""
+          "note": "野雪道",
+          "level": "高级"
         },
         {
           "name": "C6-迪斯科",
           "grade": "black",
           "len": 0.577,
-          "note": ""
+          "note": "竞技道",
+          "level": "高级"
         }
       ]
     },
@@ -780,73 +899,85 @@
           "name": "B5-处女座",
           "grade": "green",
           "len": 1.86,
-          "note": "最长初级"
+          "note": "最长初级",
+          "level": "初级"
         },
         {
           "name": "B10-双子座",
           "grade": "green",
           "len": 0.235,
-          "note": "儿童友好"
+          "note": "儿童友好",
+          "level": "初级"
         },
         {
           "name": "B11-天秤座",
           "grade": "green",
           "len": 0.235,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B12-水瓶座",
           "grade": "green",
           "len": 0.235,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B1-天蝎座",
           "grade": "blue",
           "len": 1.538,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B2-双鱼座",
           "grade": "blue",
           "len": 0.26,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B3-巨蟹座",
           "grade": "blue",
           "len": 0.405,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "A6-摩羯座",
           "grade": "blue",
           "len": 0.892,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "A8-白羊座",
           "grade": "blue",
           "len": 0.688,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B4-金牛座",
           "grade": "black",
           "len": 0.222,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "A7-射手座",
           "grade": "black",
           "len": 0.166,
-          "note": "短陡 24°"
+          "note": "短陡 24°",
+          "level": "高级"
         },
         {
           "name": "A9-狮子座",
           "grade": "black",
           "len": 0.623,
-          "note": ""
+          "note": "",
+          "level": "高级"
         }
       ]
     },
@@ -862,55 +993,64 @@
           "name": "A-罗马",
           "grade": "green",
           "len": 0.5,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B-米兰",
           "grade": "blue",
           "len": 1.5,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C-博洛尼亚",
           "grade": "blue",
           "len": 1.5,
-          "note": "宽阔 80 m"
+          "note": "宽阔 80 m",
+          "level": "中级"
         },
         {
           "name": "D-那不勒斯",
           "grade": "blue",
           "len": 1.1,
-          "note": "中高级"
+          "note": "中高级",
+          "level": "中级"
         },
         {
           "name": "E-都灵",
           "grade": "blue",
           "len": 0.9,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "F-帕尔玛",
           "grade": "blue",
           "len": 1.2,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "G-佛罗伦萨",
           "grade": "black",
           "len": 0.8,
-          "note": "最陡"
+          "note": "最陡",
+          "level": "高级"
         },
         {
           "name": "J-雪地公园",
           "grade": "black",
           "len": 0.3,
-          "note": "野雪公园"
+          "note": "野雪公园",
+          "level": "高级"
         },
         {
           "name": "I-比萨树林公园",
           "grade": "black",
           "len": 0.48,
-          "note": "树林公园"
+          "note": "树林公园",
+          "level": "高级"
         }
       ]
     },
@@ -926,187 +1066,218 @@
           "name": "A1",
           "grade": "green",
           "len": 3.518,
-          "note": "最长初级"
+          "note": "最长初级",
+          "level": "初级"
         },
         {
           "name": "D7",
           "grade": "green",
           "len": 0.115,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B2",
           "grade": "green",
           "len": 0.253,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B3",
           "grade": "green",
           "len": 0.07,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B10",
           "grade": "green",
           "len": 0.235,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "B11",
           "grade": "green",
           "len": 0.137,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "C2",
           "grade": "green",
           "len": 0.388,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "C10",
           "grade": "green",
           "len": 0.018,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "C3",
           "grade": "green",
           "len": 0.07,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "D1",
           "grade": "blue",
           "len": 0.363,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "D6",
           "grade": "blue",
           "len": 0.155,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "A2",
           "grade": "blue",
           "len": 0.52,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "A6",
           "grade": "blue",
           "len": 0.265,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B1",
           "grade": "blue",
           "len": 0.2,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B5",
           "grade": "blue",
           "len": 0.201,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B6",
           "grade": "blue",
           "len": 0.172,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B7",
           "grade": "blue",
           "len": 0.561,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B8",
           "grade": "blue",
           "len": 0.172,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "B12",
           "grade": "blue",
           "len": 0.126,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C1",
           "grade": "blue",
           "len": 0.173,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C6",
           "grade": "blue",
           "len": 0.271,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C7",
           "grade": "blue",
           "len": 0.404,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C8",
           "grade": "blue",
           "len": 0.299,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "C9",
           "grade": "blue",
           "len": 0.388,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "A3",
           "grade": "red",
           "len": 0.175,
-          "note": "红道 · 高级"
+          "note": "红道 · 高级",
+          "level": "高级（红道）"
         },
         {
           "name": "A5",
           "grade": "red",
           "len": 0.353,
-          "note": "红道最长 1.5 km"
+          "note": "红道最长 1.5 km",
+          "level": "高级（红道）"
         },
         {
           "name": "B9",
           "grade": "red",
           "len": 0.18,
-          "note": "公园红道"
+          "note": "公园红道",
+          "level": "高级（红道）"
         },
         {
           "name": "C5",
           "grade": "red",
           "len": 0.242,
-          "note": ""
+          "note": "",
+          "level": "高级（红道）"
         },
         {
           "name": "D2",
           "grade": "black",
           "len": 0.281,
-          "note": "黑道 · 九霄区"
+          "note": "黑道 · 九霄区",
+          "level": "黑道"
         },
         {
           "name": "D3",
           "grade": "black",
           "len": 0.28,
-          "note": "黑道 · 九霄区"
+          "note": "黑道 · 九霄区",
+          "level": "黑道"
         },
         {
           "name": "D5",
           "grade": "black",
           "len": 0.319,
-          "note": "黑道 · 九霄区"
+          "note": "黑道 · 九霄区",
+          "level": "黑道"
         }
       ]
     },
@@ -1122,121 +1293,145 @@
           "name": "北极星",
           "grade": "green",
           "len": 4.645,
-          "note": "环山最长"
+          "note": "环山最长 · 下段 1800 m",
+          "level": "初级",
+          "segments": [
+            "上段",
+            "下段"
+          ]
         },
         {
           "name": "老人星",
           "grade": "green",
           "len": 0.39,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "启明星",
           "grade": "green",
           "len": 0.39,
-          "note": ""
+          "note": "",
+          "level": "初级"
         },
         {
           "name": "土星",
           "grade": "blue",
           "len": 0.805,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "智神星",
           "grade": "blue",
           "len": 0.483,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "灶神星",
           "grade": "blue",
           "len": 0.483,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "织女星",
           "grade": "blue",
           "len": 1.77,
-          "note": "可接北极星"
+          "note": "可接北极星",
+          "level": "中级"
         },
         {
           "name": "金星",
           "grade": "blue",
           "len": 0.483,
-          "note": ""
+          "note": "",
+          "level": "中级"
         },
         {
           "name": "参宿七",
           "grade": "black",
           "len": 1.448,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "大角星",
           "grade": "black",
           "len": 0.483,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "天权星",
           "grade": "black",
           "len": 0.966,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "天枢星",
           "grade": "black",
           "len": 0.805,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "天狼星",
           "grade": "black",
           "len": 0.483,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "天王星",
           "grade": "black",
           "len": 0.644,
-          "note": "野雪"
+          "note": "野雪",
+          "level": "高级"
         },
         {
           "name": "天玑星",
           "grade": "black",
           "len": 1.288,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "木星",
           "grade": "black",
           "len": 0.322,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "水星",
           "grade": "black",
           "len": 0.226,
-          "note": "短陡"
+          "note": "短陡",
+          "level": "高级"
         },
         {
           "name": "火星",
           "grade": "black",
           "len": 0.634,
-          "note": ""
+          "note": "",
+          "level": "高级"
         },
         {
           "name": "牛郎星",
           "grade": "black",
           "len": 1.66,
-          "note": "高级"
+          "note": "高级",
+          "level": "高级"
         },
         {
           "name": "谷神星",
           "grade": "black",
           "len": 0.161,
-          "note": ""
+          "note": "",
+          "level": "高级"
         }
       ]
     }

@@ -6,17 +6,26 @@ import {
   TRAILS,
   TRAIL_TOTAL,
   buildTrailDigest,
-  digestLine,
+  clearDay,
+  countStatuses,
+  createEmptyBook,
   emptyDay,
   ensureDay,
-  markedCount,
-  setManyStatus,
-  setResortDone,
-  setTrailStatus,
-  toggleTrail,
+  isOpened,
+  isSplit,
+  markMany,
+  markTrail,
+  migrateBook,
+  openedCount,
+  resetResort,
+  statusOf,
+  toggleSplit,
   trailLen,
   trailPosterFilename,
+  unitsForResort,
 } from '../src/lib/trails'
+
+const D = '2026-11-22'
 
 describe('trail dataset', () => {
   it('covers all 8 resorts', () => {
@@ -48,6 +57,22 @@ describe('trail dataset', () => {
     expect(TRAILS.resorts.xueruyi.trails.filter(t => t.grade === 'black').map(t => t.name)).toEqual(['D2', 'D3', 'D5'])
   })
 
+  it('uses the official levels corrected against the resort maps', () => {
+    const tw = Object.fromEntries(TRAILS.resorts.thaiwoo.trails.map(t => [t.name, t]))
+    expect(tw['4B-波尔卡'].grade).toBe('black')
+    expect(tw['4B-波尔卡'].level).toBe('高级')
+    expect(tw['4I-迪斯科'].grade).toBe('black')
+    expect(tw['10D-现代舞'].grade).toBe('double')
+
+    const fl = Object.fromEntries(TRAILS.resorts.fulong.trails.map(t => [t.name, t]))
+    expect(fl['B9-摇摆'].grade).toBe('black')
+    expect(fl['B9-摇摆'].level).toBe('高级')
+    expect(fl['B6-乡村'].level).toBe('中高级')
+    expect(fl['B2-交响'].level).toBe('初中级')
+
+    expect(TRAILS.resorts.wanlong.trails.some(t => t.name === '雨龙道')).toBe(true)
+  })
+
   it('formats lengths', () => {
     expect(trailLen(4.16)).toBe('4.2 km')
     expect(trailLen(0.226)).toBe('226 m')
@@ -55,88 +80,162 @@ describe('trail dataset', () => {
   })
 })
 
-function sampleDay() {
-  return emptyDay('2026-11-22')
-}
+describe('long-term opened memory', () => {
+  it('keeps opened trails across days and stores no daily mark', () => {
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '长龙道', 'open')
+    expect(isOpened(book, 'wanlong', '长龙道')).toBe(true)
+    expect(book.days[D].marks.wanlong).toBeUndefined()
 
-describe('manual trail book', () => {
-  it('carries only “明日预计” into the next day as “今日新开”', () => {
-    let day = sampleDay()
-    day = setTrailStatus(day, 'wanlong', '长龙道', 'tomorrow')
-    day = setTrailStatus(day, 'wanlong', '银龙道', 'snow')
-    day = setTrailStatus(day, 'wanlong', '风龙道', 'closed')
-    day = setResortDone(day, 'wanlong', true)
+    const next = ensureDay(book, '2026-11-23')
+    expect(statusOf(next.book, next.day, 'wanlong', '长龙道')).toBe('open')
+    expect(next.carried).toBe(0)
+  })
 
-    const book = { version: 1 as const, days: { '2026-11-22': day } }
+  it('treats closed / snow / training as today-only exceptions', () => {
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '长龙道', 'open')
+    book = markTrail(book, D, 'wanlong', '长龙道', 'closed')
+    expect(countStatuses(book, book.days[D], 'wanlong').closed).toBe(1)
+
+    const next = ensureDay(book, '2026-11-23')
+    expect(countStatuses(next.book, next.day, 'wanlong').closed).toBe(0)
+    expect(statusOf(next.book, next.day, 'wanlong', '长龙道')).toBe('open')
+  })
+
+  it('turns 明日预计开放 into 今日新开 and opened the next day', () => {
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '游龙道', 'tomorrow')
+    expect(isOpened(book, 'wanlong', '游龙道')).toBe(false)
+
     const next = ensureDay(book, '2026-11-23')
     expect(next.carried).toBe(1)
-    expect(next.day.marks.wanlong).toEqual({ 长龙道: 'new' })
-    expect(next.day.done).toEqual({})
+    expect(next.day.marks.wanlong?.['游龙道']).toBe('new')
+    expect(isOpened(next.book, 'wanlong', '游龙道')).toBe(true)
   })
 
   it('does not carry across a gap of more than one day', () => {
-    let day = sampleDay()
-    day = setTrailStatus(day, 'wanlong', '长龙道', 'tomorrow')
-    const book = { version: 1 as const, days: { '2026-11-22': day } }
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '游龙道', 'tomorrow')
     const skipped = ensureDay(book, '2026-11-24')
     expect(skipped.carried).toBe(0)
     expect(skipped.day.marks).toEqual({})
   })
 
-  it('does not overwrite an existing day', () => {
-    let day = sampleDay()
-    day = setTrailStatus(day, 'genting', '曼陀罗', 'open')
-    const book = { version: 1 as const, days: { '2026-11-22': day } }
-    const same = ensureDay(book, '2026-11-22')
-    expect(same.book).toBe(book)
-    expect(same.carried).toBe(0)
-    expect(same.day.marks.genting).toEqual({ 曼陀罗: 'open' })
+  it('clears today without touching opened, and resets a resort on demand', () => {
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '长龙道', 'open')
+    book = markTrail(book, D, 'wanlong', '银龙道', 'snow')
+    book = clearDay(book, D, 'wanlong')
+    expect(book.days[D].marks.wanlong).toBeUndefined()
+    expect(isOpened(book, 'wanlong', '长龙道')).toBe(true)
+
+    book = resetResort(book, 'wanlong')
+    expect(isOpened(book, 'wanlong', '长龙道')).toBe(false)
   })
 
-  it('toggles a mark off and bulk-marks a resort', () => {
-    let day = sampleDay()
-    day = toggleTrail(day, 'wanlong', '长龙道', 'new')
-    expect(day.marks.wanlong?.['长龙道']).toBe('new')
-    day = toggleTrail(day, 'wanlong', '长龙道', 'new')
-    expect(day.marks.wanlong?.['长龙道']).toBeUndefined()
+  it('bulk-marks all trails of a resort as opened', () => {
+    let book = createEmptyBook()
+    const keys = unitsForResort(book, 'wanlong').map(u => u.key)
+    book = markMany(book, D, 'wanlong', keys, 'open')
+    expect(openedCount(book, 'wanlong')).toBe(32)
+  })
+})
 
-    const names = TRAILS.resorts.wanlong.trails.map(t => t.name)
-    day = setManyStatus(day, 'wanlong', names, 'open')
-    expect(markedCount(day, 'wanlong')).toBe(32)
-    day = setManyStatus(day, 'wanlong', names, null)
-    expect(day.marks.wanlong).toBeUndefined()
+describe('v1 → v2 migration', () => {
+  it('turns old per-day open marks into long-term opened', () => {
+    const v1 = {
+      version: 1,
+      days: {
+        '2026-11-21': { date: '2026-11-21', marks: { wanlong: { 长龙道: 'open' } }, done: {}, updatedAt: '2026-11-21T18:00' },
+        '2026-11-22': {
+          date: '2026-11-22',
+          marks: { wanlong: { 长龙道: 'open', 游龙道: 'new', 银龙道: 'closed' }, genting: { 曼陀罗: 'tomorrow' } },
+          done: { wanlong: true },
+          updatedAt: '2026-11-22T18:00',
+        },
+      },
+    }
+    const book = migrateBook(v1)!
+    expect(book.version).toBe(2)
+    expect(book.opened.wanlong).toEqual({ 长龙道: true, 游龙道: true })
+    expect(book.days['2026-11-22'].marks.wanlong).toEqual({ 游龙道: 'new', 银龙道: 'closed' })
+    expect(book.days['2026-11-22'].done.wanlong).toBe(true)
+    expect(book.days['2026-11-21'].done).toEqual({})
+  })
+})
+
+describe('upper / lower sections', () => {
+  it('splits a trail into 上段/下段 and keeps the opened state', () => {
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '银龙道', 'open')
+    book = toggleSplit(book, D, 'wanlong', '银龙道')
+    expect(isSplit(book, 'wanlong', '银龙道')).toBe(true)
+    expect(unitsForResort(book, 'wanlong').filter(u => u.trail.name === '银龙道')).toHaveLength(2)
+    expect(isOpened(book, 'wanlong', '银龙道|上段')).toBe(true)
+    expect(isOpened(book, 'wanlong', '银龙道|下段')).toBe(true)
+
+    book = markTrail(book, D, 'wanlong', '银龙道|上段', 'snow')
+    expect(countStatuses(book, book.days[D], 'wanlong').snow).toBe(1)
+
+    book = toggleSplit(book, D, 'wanlong', '银龙道')
+    expect(isSplit(book, 'wanlong', '银龙道')).toBe(false)
+    expect(unitsForResort(book, 'wanlong').filter(u => u.trail.name === '银龙道')).toHaveLength(1)
+    expect(isOpened(book, 'wanlong', '银龙道')).toBe(true)
+    expect(countStatuses(book, book.days[D], 'wanlong').snow).toBe(1)
   })
 
-  it('builds a per-resort summary and keeps 未录入 rows', () => {
-    let day = sampleDay()
-    day = setTrailStatus(day, 'wanlong', '长龙道', 'new')
-    day = setTrailStatus(day, 'wanlong', '银龙道', 'snow')
-    day = setTrailStatus(day, 'genting', '曼陀罗', 'closed')
-    day = setResortDone(day, 'wanlong', true)
+  it('pre-marks 金山岭 北极星 as two sections in the dataset', () => {
+    const star = TRAILS.resorts.jinshanling.trails.find(t => t.name === '北极星')!
+    expect(star.segments).toEqual(['上段', '下段'])
+  })
+})
 
-    const digest = buildTrailDigest(day, '2026-11-22', '07:30')
-    const wanlong = digest.rows.find(r => r.resort.id === 'wanlong')!
-    expect(wanlong.done).toBe(true)
-    expect(wanlong.marked).toBe(2)
-    expect(wanlong.openCount).toBe(2)
+describe('trail digest', () => {
+  function sampleBook() {
+    let book = createEmptyBook()
+    book = markTrail(book, D, 'wanlong', '长龙道', 'open')
+    book = markTrail(book, D, 'wanlong', '游龙道', 'new')
+    book = markTrail(book, D, 'wanlong', '银龙道', 'snow')
+    book = markTrail(book, D, 'genting', '曼陀罗', 'closed')
+    return book
+  }
+
+  it('only includes resorts that have opened or marked trails', () => {
+    const book = sampleBook()
+    const digest = buildTrailDigest(book, book.days[D], D, '07:30')
+    expect(digest.rows.map(r => r.resort.id)).toEqual(['wanlong', 'genting'])
+    expect(digest.rows[0].opened).toBe(2)
     expect(digest.totals.new).toBe(1)
     expect(digest.totals.snow).toBe(1)
     expect(digest.totals.closed).toBe(1)
-    expect(digest.markedResorts).toBe(2)
-    expect(digest.doneCount).toBe(1)
     expect(digest.anyMarks).toBe(true)
-    expect(digest.rows.filter(r => !r.marked)).toHaveLength(6)
-    expect(digestLine(wanlong)).toContain('新·长龙道')
     expect(digest.dateLabel).toBe('11/22 周日')
   })
 
+  it('keeps full names for every change group', () => {
+    const book = sampleBook()
+    const digest = buildTrailDigest(book, book.days[D], D, '07:30')
+    const row = digest.rows[0]
+    const labels = row.groups.map(g => `${g.status}:${g.names.join(',')}`)
+    expect(labels).toContain('new:游龙道')
+    expect(labels).toContain('snow:银龙道')
+    expect(row.groups.find(g => g.status === 'snow')?.names).toEqual(['银龙道'])
+  })
+
+  it('supports excluding a resort from the poster', () => {
+    const book = sampleBook()
+    const digest = buildTrailDigest(book, book.days[D], D, '07:30', ['genting'])
+    expect(digest.rows).toHaveLength(1)
+    expect(digest.rows[0].resort.id).toBe('wanlong')
+  })
+
   it('is empty but valid before any input', () => {
-    const digest = buildTrailDigest(emptyDay('2026-11-22'), '2026-11-22', '07:30')
+    const digest = buildTrailDigest(createEmptyBook(), emptyDay(D), D, '07:30')
     expect(digest.anyMarks).toBe(false)
-    expect(digest.markedTrails).toBe(0)
-    expect(digest.rows).toHaveLength(8)
-    expect(digest.rows.every(r => !r.marked)).toBe(true)
+    expect(digest.rows).toHaveLength(0)
+    expect(digest.openedTotal).toBe(0)
     expect(STATUS_ORDER).toHaveLength(6)
-    expect(trailPosterFilename(digest, '3:4')).toContain('3x4')
+    expect(trailPosterFilename(digest, '3:4', 900)).toContain('3x4-1080x1800')
   })
 })

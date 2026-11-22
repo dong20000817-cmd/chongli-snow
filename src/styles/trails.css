@@ -27,6 +27,10 @@
 .tr-count{font-size:9px;font-weight:600;display:inline-flex;align-items:baseline;gap:3px;opacity:.95}
 .tr-count b{font-size:11px;font-weight:750}
 .tr-count.zero{color:var(--ink4)!important}
+.tr-opened{font-size:10px;color:var(--ink2);margin-top:7px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.tr-opened b{font-size:15px;color:#fff;font-weight:750;margin-right:1px}
+.tr-opened-actions{display:inline-flex;gap:10px;flex:none}
+.tr-opened-actions i{font-style:normal;font-size:8.5px;color:var(--ink4);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
 
 .tr-brush{margin-top:10px;padding:10px 12px 11px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
 .tr-brush-head{display:flex;justify-content:space-between;align-items:center;font-size:9px;color:var(--ink3);font-weight:600}
@@ -47,8 +51,13 @@
 .tr-trail:active{background:rgba(255,255,255,.05)}
 .tr-trail .trail-name{display:block}
 .tr-trail .trail-meta{display:block}
+.tr-trail.sub{padding-left:18px;background:rgba(255,255,255,.025)}
+.tr-trail.sub .trail-name{font-weight:600}
 .tr-status{font-size:8px;font-weight:700;padding:3px 6px;border-radius:5px;white-space:nowrap;flex:none;
   color:var(--ink4);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.tr-split{flex:none;width:24px;height:24px;font-size:9px;font-weight:700;color:var(--ink3);border-radius:7px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center}
+.tr-split.on{color:#9ED4FF;border-color:rgba(90,200,250,.35);background:rgba(10,132,255,.14)}
 
 .tr-tip{margin-top:12px;font-size:8.5px;line-height:1.65;color:var(--ink4);padding:0 3px}
 
@@ -60,9 +69,9 @@
 .tr-actions .primary{background:linear-gradient(180deg,#4CA4FF,#0A84FF);border-color:rgba(120,190,255,.5);
   box-shadow:0 6px 18px rgba(10,132,255,.3),inset 0 1px 0 rgba(255,255,255,.28)}
 
-/* ---------- 雪道情报图（540 宽画布，2x 导出 1080） ---------- */
-.trail-card{position:relative;width:540px;display:flex;flex-direction:column;overflow:hidden;
-  padding:26px 26px 18px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;
+/* ---------- 雪道情报图（540 宽画布，内容多自动加长） ---------- */
+.trail-card{position:relative;width:540px;min-height:720px;display:flex;flex-direction:column;overflow:hidden;
+  padding:28px 26px 20px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;
   background:linear-gradient(160deg,#123a5c 0%,#0a1f39 44%,#06101d 100%)}
 .trail-card:before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
   background:radial-gradient(52% 34% at 16% 4%,rgba(0,229,192,.24),transparent 68%),
@@ -77,49 +86,43 @@
 .tc-top{display:flex;align-items:center;justify-content:space-between}
 .tc-brand{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;letter-spacing:.02em;color:rgba(255,255,255,.9)}
 .tc-date{font-size:11.5px;color:rgba(255,255,255,.62);font-variant-numeric:tabular-nums}
-.tc-title{font-size:36px;font-weight:800;letter-spacing:-.8px;line-height:1.05;margin-top:10px}
-.tc-sub{font-size:11.5px;color:rgba(255,255,255,.62);margin-top:6px}
-.tc-totals{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.tc-title{font-size:38px;font-weight:800;letter-spacing:-.8px;line-height:1.05;margin-top:12px}
+.tc-totals{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
 .tc-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:650;color:var(--sc);
-  background:var(--scbg);border:1px solid var(--scbd);
-  padding:3px 8px;border-radius:999px}
+  background:var(--scbg);border:1px solid var(--scbd);padding:4px 9px;border-radius:999px}
 .tc-chip i{width:5px;height:5px;border-radius:50%;background:var(--sc)}
 .tc-chip b{font-size:12px;font-weight:800;color:#fff}
 .tc-empty{font-size:11px;color:rgba(255,255,255,.42)}
 
-.tc-list{flex:1;min-height:0;display:flex;flex-direction:column;gap:4px;margin-top:11px}
-.tc-row{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:5px 10px 6px;border-radius:11px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.075)}
-.tc-row.done{background:rgba(0,229,192,.07);border-color:rgba(0,229,192,.2)}
-.tc-row.empty{opacity:.55}
+.tc-list{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.tc-none{font-size:12px;color:rgba(255,255,255,.45);text-align:center;padding:30px 0}
+.tc-row{padding:9px 12px 10px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.075)}
+.tc-row.done{background:rgba(0,229,192,.06);border-color:rgba(0,229,192,.18)}
 .tc-row-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.tc-row-name{display:flex;align-items:center;gap:4px;min-width:0;flex-wrap:wrap}
-.tc-row-name b{font-size:15px;font-weight:750;letter-spacing:.01em;white-space:nowrap;margin-right:2px}
+.tc-row-name{display:flex;align-items:center;gap:6px;min-width:0;flex-wrap:nowrap}
+.tc-row-name b{font-size:16px;font-weight:750;letter-spacing:.01em;white-space:nowrap}
 .tc-ok{font-size:10px;font-weight:800;color:#00E5C0;background:rgba(0,229,192,.16);border-radius:999px;padding:1px 4px;line-height:1.2}
-.tc-nomark{font-size:9px;color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:1px 5px}
-.tc-row-count{font-size:9px;color:rgba(255,255,255,.45);white-space:nowrap;font-variant-numeric:tabular-nums;flex:none}
-.tc-row-count b{font-size:11.5px;font-weight:750;color:#fff;margin-right:1px}
-.tc-badge{display:inline-flex;align-items:center;gap:3px;font-size:8.5px;font-weight:700;color:var(--sc);
-  background:var(--scbg,rgba(255,255,255,.1));border-radius:4px;padding:1px 4px}
-.tc-badge i{width:4px;height:4px;border-radius:50%;background:var(--sc)}
-.tc-line{font-size:9.5px;line-height:1.35;color:rgba(255,255,255,.64);margin-top:1px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tc-line.two{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.tc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;
-  padding-top:8px;border-top:1px solid rgba(255,255,255,.1);font-size:9px;color:rgba(255,255,255,.4)}
+.tc-row-tags{font-size:8.5px;font-weight:600;color:rgba(255,255,255,.45);margin-top:2px}
+.tc-row-count{font-size:9.5px;color:rgba(255,255,255,.45);white-space:nowrap;font-variant-numeric:tabular-nums;flex:none}
+.tc-row-count b{font-size:12.5px;font-weight:750;color:#fff;margin-right:2px}
+.tc-group{display:flex;gap:8px;margin-top:4px;font-size:10px;line-height:1.55}
+.tc-group-label{flex:none;width:76px;font-size:9.5px;font-weight:700;padding-top:1px}
+.tc-group-label.quiet{color:rgba(255,255,255,.35);font-weight:500}
+.tc-group-names{flex:1;min-width:0;color:rgba(255,255,255,.8);word-break:break-word}
+.tc-group-names.quiet{color:rgba(255,255,255,.35)}
+.tc-foot{display:flex;justify-content:flex-end;margin-top:auto;padding-top:16px;font-size:10px;color:rgba(255,255,255,.4)}
 .tc-handle{font-weight:650;color:rgba(255,255,255,.58)}
 
-/* 9:16 画布：行更高，名字可两行 */
-.trail-card.tall{padding:34px 32px 24px}
-.trail-card.tall .tc-title{font-size:44px;margin-top:14px}
-.trail-card.tall .tc-sub{font-size:13px;margin-top:8px}
-.trail-card.tall .tc-totals{margin-top:14px;gap:7px}
-.trail-card.tall .tc-chip{font-size:12px;padding:4px 9px}
-.trail-card.tall .tc-list{gap:8px;margin-top:16px}
-.trail-card.tall .tc-row{padding:8px 13px 9px;border-radius:13px}
-.trail-card.tall .tc-row-name b{font-size:16.5px}
-.trail-card.tall .tc-badge{font-size:9.5px;padding:2px 5px}
-.trail-card.tall .tc-line{font-size:10.5px;line-height:1.45}
-.trail-card.tall .tc-foot{font-size:10px;margin-top:14px}
+.trail-card.tall{min-height:960px;padding:34px 32px 24px}
+.trail-card.tall .tc-title{font-size:46px;margin-top:16px}
+.trail-card.tall .tc-totals{margin-top:16px;gap:7px}
+.trail-card.tall .tc-chip{font-size:12px;padding:5px 10px}
+.trail-card.tall .tc-list{gap:10px;margin-top:20px}
+.trail-card.tall .tc-row{padding:11px 14px 12px;border-radius:14px}
+.trail-card.tall .tc-row-name b{font-size:18px}
+.trail-card.tall .tc-group{font-size:11px;margin-top:5px}
+.trail-card.tall .tc-group-label{width:84px;font-size:10.5px}
+.trail-card.tall .tc-foot{font-size:11px}
 
 /* ---------- 情报图预览页 ---------- */
 .tp-screen{padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 108px)}
@@ -144,10 +147,20 @@
   background:linear-gradient(180deg,#4CA4FF,#0A84FF);border:1px solid rgba(120,190,255,.5);
   box-shadow:0 6px 18px rgba(10,132,255,.3),inset 0 1px 0 rgba(255,255,255,.28)}
 .tp-save button:disabled{opacity:.6}
-
+.tp-picker{margin-top:12px;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
+.tp-picker-head{display:flex;justify-content:space-between;font-size:9px;color:var(--ink3)}
+.tp-picker-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.tp-pick{font-size:9.5px;font-weight:600;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--ink3)}
+.tp-pick.on{color:#0b1725;background:#7FF3E3;border-color:#7FF3E3}
 .trail-export-stage{position:fixed;left:-99999px;top:0;z-index:-1;pointer-events:none;opacity:1}
 
-/* ---------- 开发者页：雪道情报入口 ---------- */
+/* ---------- 其它页面衔接 ---------- */
+.snow-cta{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-size:9.5px;font-weight:650;color:#CFFFF7;
+  background:rgba(0,229,192,.16);border:1px solid rgba(0,229,192,.28);padding:6px 10px;border-radius:999px}
+.dc-empty{font-size:10px;color:rgba(255,255,255,.45);padding:14px 4px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:10px}
+.tr-screen .dev-toast,.tp-screen .dev-toast{bottom:calc(env(safe-area-inset-bottom, 0px) + 96px)}
+
+/* 开发者页雪道情报入口 */
 .trail-entry{position:relative;margin:10px 20px 0;padding:13px 14px;border-radius:20px;overflow:hidden;
   background:linear-gradient(135deg,rgba(0,229,192,.3),rgba(0,229,192,.06) 62%,rgba(90,200,250,.1)),rgba(255,255,255,.05);
   border:1px solid rgba(0,229,192,.34);box-shadow:0 14px 34px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.14)}
@@ -166,7 +179,6 @@
   box-shadow:0 4px 12px rgba(0,229,192,.28),inset 0 1px 0 rgba(255,255,255,.35)}
 .trail-entry .poster-entry-actions a:not(.primary){flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff}
 .poster-entry-kicker .new.mint{color:#03211d;background:#7FF3E3}
-.snow-cta{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-size:9.5px;font-weight:650;color:#CFFFF7;
-  background:rgba(0,229,192,.16);border:1px solid rgba(0,229,192,.28);padding:6px 10px;border-radius:999px}
-.dc-empty{font-size:10px;color:rgba(255,255,255,.45);padding:14px 4px;text-align:center;border:1px dashed rgba(255,255,255,.14);border-radius:10px}
-.tr-screen .dev-toast,.tp-screen .dev-toast{bottom:calc(env(safe-area-inset-bottom, 0px) + 96px)}
+.tr-trail-main{display:flex;align-items:center;gap:8px;flex:1;min-width:0;text-align:left}
+.tr-level{font-style:normal;font-size:7.5px;font-weight:700;color:#9ED4FF;background:rgba(10,132,255,.15);
+  border:1px solid rgba(10,132,255,.24);border-radius:4px;padding:1px 4px;margin-left:5px;vertical-align:1px}

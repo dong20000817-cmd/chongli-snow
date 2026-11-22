@@ -9,10 +9,11 @@ import { exportPosterImage } from '../lib/export'
 import { ROAD_DATA, isToday } from '../lib/status'
 import {
   buildTrailDigest,
+  createEmptyBook,
   emptyDay,
   loadBook,
   trailPosterFilename,
-  type TrailDay,
+  type TrailBook,
   type TrailDigest,
 } from '../lib/trails'
 import { RESORTS } from '../data/resorts'
@@ -25,15 +26,17 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
   onRefresh: () => void
   refreshing: boolean
 }) {
-  const [day, setDay] = useState<TrailDay | null>(null)
+  const [book, setBook] = useState<TrailBook | null>(null)
   useEffect(() => {
-    setDay(loadBook(snapshot.today).day)
+    setBook(loadBook(snapshot.today).book)
   }, [snapshot.today])
 
-  const digest = useMemo(() => buildDigest(snapshot, day ?? undefined), [snapshot, day])
+  const trailBook = book ?? createEmptyBook()
+  const day = trailBook.days[snapshot.today] ?? emptyDay(snapshot.today)
+  const digest = useMemo(() => buildDigest(snapshot, book ?? undefined), [snapshot, book])
   const trailDigest: TrailDigest = useMemo(
-    () => buildTrailDigest(day ?? emptyDay(snapshot.today), snapshot.today, day?.updatedAt.slice(11, 16) || snapshot.generatedAt.slice(11, 16)),
-    [day, snapshot],
+    () => buildTrailDigest(trailBook, day, snapshot.today, day.updatedAt.slice(11, 16) || snapshot.generatedAt.slice(11, 16)),
+    [trailBook, day, snapshot],
   )
 
   const weatherRef = useRef<HTMLDivElement>(null)
@@ -107,7 +110,7 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
     if (!trailRef.current || busy === 'trail') return
     setBusy('trail')
     try {
-      const result = await exportPosterImage(trailRef.current, trailPosterFilename(trailDigest, '3:4'), '滑雪天气通 · 雪道情报')
+      const result = await exportPosterImage(trailRef.current, trailPosterFilename(trailDigest, '3:4', trailRef.current.offsetHeight), '滑雪天气通 · 雪道情报')
       if (result === 'shared') showToast('已打开系统分享 · 点「存储图像」进相册')
       else if (result === 'downloaded') showToast('已下载 PNG · 可在「文件」里长按存相册')
     } catch {
@@ -127,9 +130,9 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
   }
 
   const demo = ROAD_DATA.isDemo
-  const snowStale = !day?.updatedAt
+  const snowStale = !day.updatedAt && trailDigest.openedTotal === 0
   const roadStale = !isToday(ROAD_DATA.updatedAt, snapshot.today)
-  const doneCount = RESORTS.filter(r => day?.done[r.id]).length
+  const doneCount = RESORTS.filter(r => day.done[r.id]).length
   const trailProgress = Math.round((trailDigest.markedResorts / RESORTS.length) * 100)
 
   return (
@@ -170,7 +173,7 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
           <div>
             <div className="poster-entry-kicker"><span className="new mint">NEW</span> 手动录入 · 自动顺延</div>
             <div className="trail-entry-title">雪道情报</div>
-            <div className="trail-entry-sub">已录 {doneCount}/8 家 · 标注 {trailDigest.markedTrails} 条 · 共 {trailDigest.totalTrails} 条雪道</div>
+            <div className="trail-entry-sub">已开放 {trailDigest.openedTotal} 条 · 今日变化 {trailDigest.markedTrails} 条 · 已录 {doneCount}/8 家</div>
           </div>
           <a className="trail-entry-go" href="#/trailposter">情报图 →</a>
         </div>
@@ -187,7 +190,7 @@ export function DevPage({ snapshot, resortId, onRefresh, refreshing }: {
           <div className="summary-side"><b>{digest.weather.length} 家雪场</b>雪道人工录入 · {ROAD_DATA.isDemo ? '路况示例' : '路况已接入'}</div>
         </div>
         <div className="desc">天气、雪道、路况三张卡片按 3:4 生成；雪道情报图汇总你今天的标注，适合小红书竖版发布。</div>
-        <div className="meta">天气快照 {snapshot.generatedAt.slice(11, 16)} · 雪道 {day?.updatedAt ? day.updatedAt.slice(11, 16) : '未录入'} · 路况 {ROAD_DATA.updatedAt.slice(11, 16)}</div>
+        <div className="meta">天气快照 {snapshot.generatedAt.slice(11, 16)} · 雪道 {day.updatedAt ? day.updatedAt.slice(11, 16) : trailDigest.openedTotal ? `${trailDigest.openedTotal} 条已开放` : '未录入'} · 路况 {ROAD_DATA.updatedAt.slice(11, 16)}</div>
       </div>
 
       <div className="dev-actions">

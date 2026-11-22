@@ -5,7 +5,7 @@ import { windLevel } from './wind'
 import { fmtVis, tempShort } from './format'
 import { ROAD_DATA, roadStateColor, timeOf } from './status'
 import { RESORTS } from '../data/resorts'
-import { TRAILS, countStatuses, markedCount, type TrailDay } from './trails'
+import { TRAILS, countStatuses, emptyDay, markedCount, unitLabel, type TrailBook } from './trails'
 
 export interface WeatherDigestRow {
   resort: ResortForecast
@@ -41,7 +41,7 @@ export interface DigestData {
   text: string
 }
 
-export function buildDigest(snapshot: Snapshot, day?: TrailDay): DigestData {
+export function buildDigest(snapshot: Snapshot, book?: TrailBook): DigestData {
   const idx = effectiveDayIndex(snapshot)
   const resorts = Object.values(snapshot.resorts)
   const weather = resorts
@@ -54,13 +54,14 @@ export function buildDigest(snapshot: Snapshot, day?: TrailDay): DigestData {
 
   const snow: SnowHighlight[] = []
   const snowTotals: SnowDigestTotal[] = []
-  if (day) {
+  const tday = book ? (book.days[snapshot.today] ?? emptyDay(snapshot.today)) : null
+  if (book && tday) {
     for (const meta of RESORTS) {
       const data = TRAILS.resorts[meta.id]
       if (!data) continue
-      const marks = day.marks[meta.id] ?? {}
-      const counts = countStatuses(day, meta.id)
-      const namesOf = (status: string) => Object.entries(marks).filter(([, s]) => s === status).map(([n]) => n)
+      const marks = tday.marks[meta.id] ?? {}
+      const counts = countStatuses(book, tday, meta.id)
+      const namesOf = (status: string) => Object.entries(marks).filter(([, s]) => s === status).map(([k]) => unitLabel(k))
       const fresh = namesOf('new')
       const expect = namesOf('tomorrow')
       const closed = namesOf('closed')
@@ -73,7 +74,7 @@ export function buildDigest(snapshot: Snapshot, day?: TrailDay): DigestData {
           short: meta.short,
           open: (['open', 'new', 'snow', 'training'] as const).reduce((n, k) => n + counts[k], 0),
           total: data.trails.length,
-          marked: markedCount(day, meta.id) > 0,
+          marked: markedCount(book, tday, meta.id) > 0,
         })
       }
     }
@@ -91,8 +92,8 @@ export function buildDigest(snapshot: Snapshot, day?: TrailDay): DigestData {
     weather,
     snow,
     snowTotals,
-    snowTime: day?.updatedAt ? timeOf(day.updatedAt) : '',
-    hasSnow: Boolean(day && day.updatedAt),
+    snowTime: tday?.updatedAt ? timeOf(tday.updatedAt) : '',
+    hasSnow: Boolean(tday && (tday.updatedAt || Object.keys(book?.opened ?? {}).length)),
     road: ROAD_DATA,
     text,
   }

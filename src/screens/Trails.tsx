@@ -8,22 +8,29 @@ import {
   STATUS_META,
   STATUS_ORDER,
   TRAILS,
-  TRAIL_TOTAL,
+  clearDay,
   countStatuses,
   emptyDay,
-  isSkiable,
+  levelOf,
+  showLevel,
   loadBook,
-  markedCount,
+  markMany,
+  markTrail,
   nextPendingResort,
-  saveDay,
-  setManyStatus,
+  openedCount,
+  resetResort,
+  saveBook,
   setResortDone,
-  toggleTrail,
-  trailByGrade,
+  toggleSplit,
   trailLen,
+  unitsByGrade,
+  unitsForResort,
+  isSplit,
+  statusOf,
   type TrailBook,
   type TrailDay,
   type TrailStatus,
+  type TrailUnit,
 } from '../lib/trails'
 
 function todayLabel(date: string): string {
@@ -32,11 +39,12 @@ function todayLabel(date: string): string {
 
 export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resortId: string }) {
   const today = snapshot.today
+  const [book, setBook] = useState<TrailBook | null>(null)
   const [day, setDay] = useState<TrailDay | null>(null)
   const [carried, setCarried] = useState(0)
   const [selected, setSelected] = useState(resortId in TRAILS.resorts ? resortId : RESORTS[0].id)
   const [brush, setBrush] = useState<TrailStatus>('new')
-  const [onlyMarked, setOnlyMarked] = useState(false)
+  const [onlyChanged, setOnlyChanged] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
 
   const bookRef = useRef<TrailBook | null>(null)
@@ -46,6 +54,7 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
     const loaded = loadBook(today)
     bookRef.current = loaded.book
     dayRef.current = loaded.day
+    setBook(loaded.book)
     setDay(loaded.day)
     setCarried(loaded.carried)
   }, [today])
@@ -55,47 +64,94 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
     window.setTimeout(() => setToast(null), 2400)
   }
 
-  const commit = (next: TrailDay) => {
-    const base = bookRef.current ?? { version: 1 as const, days: {} }
-    const nb = saveDay(base, next)
-    bookRef.current = nb
-    dayRef.current = next
-    setDay(next)
+  const commit = (next: TrailBook) => {
+    saveBook(next)
+    bookRef.current = next
+    dayRef.current = next.days[today] ?? emptyDay(today)
+    setBook(next)
+    setDay(dayRef.current)
   }
 
   const current = day ?? emptyDay(today)
-  const marks = current.marks[selected] ?? {}
-  const counts = countStatuses(current, selected)
   const data = TRAILS.resorts[selected]
-  const sections = useMemo(() => trailByGrade(selected), [selected])
+  const units = useMemo(() => (book ? unitsForResort(book, selected) : []), [book, selected])
+  const sections = useMemo(() => (book ? unitsByGrade(book, selected) : []), [book, selected])
+  const counts = book ? countStatuses(book, current, selected) : null
+  const opened = book ? openedCount(book, selected) : 0
+  const total = units.length
+  const unitWord = units.some(u => u.seg) ? '段' : '条'
   const doneCount = RESORTS.filter(r => current.done[r.id]).length
-  const totalMarked = markedCount(current)
+  const openedAll = book ? RESORTS.reduce((n, r) => n + openedCount(book, r.id), 0) : 0
+  const changed = book ? countStatuses(book, current) : null
   const done = Boolean(current.done[selected])
 
-  /** 所有改动都从 ref 里的最新一天算，连点两条雪道也不会互相覆盖。 */
-  const latest = (): TrailDay => dayRef.current ?? emptyDay(today)
+  const latestBook = (): TrailBook => bookRef.current ?? { version: 2, opened: {}, splits: {}, days: {} }
+  const latestDay = (): TrailDay => dayRef.current ?? emptyDay(today)
+
+  const setStatus = (key: string, status: TrailStatus | null) => {
+    const b = latestBook()
+    const d = latestDay()
+    const cur = statusOf(b, d, selected, key)
+    commit(markTrail(b, today, selected, key, cur === status ? null : status))
+  }
 
   const markAll = (status: TrailStatus | null) => {
-    const names = data?.trails.map(t => t.name) ?? []
-    commit(setManyStatus(latest(), selected, names, status))
-    flash(status === 'open' ? `已把 ${names.length} 条标为开放，再点掉例外` : '已清空本家标注')
+    const keys = units.map(u => u.key)
+    commit(markMany(latestBook(), today, selected, keys, status))
+    flash(status === 'open' ? `已把 ${keys.length} 条加入“已开放”长期记忆` : '已清空本家今日变化')
   }
 
-  const toggleRow = (name: string) => {
-    commit(toggleTrail(latest(), selected, name, brush))
+  const clearToday = () => {
+    commit(clearDay(latestBook(), today, selected))
+    flash('已清空今日变化 · 已开放的长期记忆保留')
   }
 
-  const toggleDone = () => {
-    commit(setResortDone(latest(), selected, !done))
+  const reset = () => {
+    if (!window.confirm('重置本家的“已开放”记忆和所有标注？此操作不可恢复。')) return
+    commit(resetResort(latestBook(), selected))
+    flash('已重置本家')
   }
 
   const finish = () => {
-    const d = latest()
+    const b = latestBook()
+    const d = latestDay()
     const next = nextPendingResort(d, selected)
-    commit(setResortDone(d, selected, true))
+    commit(setResortDone(b, today, selected, true))
     if (next !== selected) setSelected(next)
     const left = RESORTS.filter(r => r.id !== selected && !d.done[r.id]).length
     flash(left ? `本家已录完 · 下一家 ${TRAILS.resorts[next]?.short ?? ''}` : '8 家全部录完，可以出情报图了')
+  }
+
+  const renderRow = (unit: TrailUnit) => {
+    const status = book ? statusOf(book, current, selected, unit.key) : undefined
+    const meta = status ? STATUS_META[status] : null
+    const split = isSplit(book ?? latestBook(), selected, unit.trail.name)
+    const isFirstSeg = split && unit.seg === (unit.trail.segments ?? ['上段', '下段'])[0]
+    const label = unit.seg ? `${unit.trail.name}（${unit.seg}）` : unit.trail.name
+    const level = levelOf(unit.trail)
+    const showBadge = showLevel(unit.trail)
+    return (
+      <div className={`tr-trail${unit.seg ? ' sub' : ''}`} key={unit.key}>
+        <button className="tr-trail-main" onClick={() => setStatus(unit.key, brush)} aria-pressed={Boolean(status)}>
+          <span className="trail-color" style={{ background: GRADE_META[unit.grade].color }} />
+          <span className="trail-main">
+            <span className="trail-name">{label}{showBadge && <i className="tr-level">{level}</i>}</span>
+            <span className="trail-meta">{[trailLen(unit.trail.len), unit.trail.note].filter(Boolean).join(' · ') || '—'}</span>
+          </span>
+          <span
+            className="tr-status"
+            style={status && meta ? { color: meta.color, background: `${meta.color}1c`, border: `1px solid ${meta.color}33` } : undefined}
+          >
+            {status && meta ? meta.label : '未标'}
+          </span>
+        </button>
+        {(isFirstSeg || !split) && (
+          <button className={`tr-split${split ? ' on' : ''}`} onClick={() => commit(toggleSplit(latestBook(), today, selected, unit.trail.name))}>
+            {split ? '合' : '段'}
+          </button>
+        )}
+      </div>
+    )
   }
 
   return (
@@ -104,7 +160,7 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
         <a className="dev-back" href={`#/snow/${selected}`} aria-label="返回雪道页"><Icon name="back" size={16} /></a>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className="tr-title">雪道情报录入</div>
-          <div className="tr-sub">{todayLabel(today)} · 已录 {doneCount}/8 家 · 标注 {totalMarked}/{TRAIL_TOTAL} 条</div>
+          <div className="tr-sub">{todayLabel(today)} · 已录 {doneCount}/8 家 · 已开放 {openedAll} 条</div>
         </div>
         <a className="tr-poster-link" href="#/trailposter">情报图</a>
       </div>
@@ -113,13 +169,14 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
 
       {carried > 0 && (
         <div className="advice" style={{ marginTop: 10 }}>
-          <b>已顺延：</b>昨天标记的 {carried} 条“明日预计”，今天已自动变成“今日新开”，核对一下就行。
+          <b>已顺延：</b>昨天标记的 {carried} 条“明日预计开放”，今天已自动变成“今日新开”，并加入已开放。
         </div>
       )}
 
       <div className="tr-resort-tabs">
         {RESORTS.map(r => {
-          const n = markedCount(current, r.id)
+          const n = book ? countStatuses(book, current, r.id) : null
+          const changes = n ? n.new + n.tomorrow + n.snow + n.training + n.closed : 0
           return (
             <button
               key={r.id}
@@ -127,7 +184,7 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
               onClick={() => setSelected(r.id)}
             >
               {r.short}
-              {current.done[r.id] ? <em>✓</em> : n > 0 ? <em className="num">{n}</em> : null}
+              {current.done[r.id] ? <em>✓</em> : changes > 0 ? <em className="num">{changes}</em> : null}
             </button>
           )
         })}
@@ -138,16 +195,23 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
           <div className="tr-resort-top">
             <div>
               <div className="tr-resort-name">{data.name}</div>
-              <div className="tr-resort-meta">{data.trails.length} 条 · {data.note}</div>
+              <div className="tr-resort-meta">{total} {unitWord} · {data.note}</div>
             </div>
-            <button className={`tr-done-btn${done ? ' on' : ''}`} onClick={toggleDone}>
+            <button className={`tr-done-btn${done ? ' on' : ''}`} onClick={() => commit(setResortDone(latestBook(), today, selected, !done))}>
               {done ? '已录完 ✓' : '标为录完'}
             </button>
           </div>
+          <div className="tr-opened">
+            <span>已开放 <b>{opened}</b> / {total} {unitWord}</span>
+            <span className="tr-opened-actions">
+              {changed && <i onClick={clearToday}>清空今日变化</i>}
+              <i onClick={reset}>重置本家</i>
+            </span>
+          </div>
           <div className="tr-counts">
             {STATUS_ORDER.map(s => (
-              <span key={s} className={`tr-count${counts[s] ? '' : ' zero'}`} style={{ color: STATUS_META[s].color }}>
-                {STATUS_META[s].short}<b>{counts[s]}</b>
+              <span key={s} className={`tr-count${counts?.[s] ? '' : ' zero'}`} style={{ color: STATUS_META[s].color }}>
+                {STATUS_META[s].short}<b>{counts?.[s] ?? 0}</b>
               </span>
             ))}
           </div>
@@ -157,7 +221,7 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
       <div className="tr-brush">
         <div className="tr-brush-head">
           <span>点雪道＝标成</span>
-          <span className="tr-brush-hint">再点一次取消</span>
+          <span className="tr-brush-hint">再点一次取消；“已开放”会长期记着</span>
         </div>
         <div className="tr-brush-row">
           {STATUS_ORDER.map(s => (
@@ -176,59 +240,36 @@ export function TrailsScreen({ snapshot, resortId }: { snapshot: Snapshot; resor
 
       <div className="tr-quick">
         <button onClick={() => markAll('open')}>全部开放</button>
-        <button onClick={() => markAll(null)}>清空本家</button>
-        <button className={onlyMarked ? 'on' : ''} onClick={() => setOnlyMarked(v => !v)}>只看已标</button>
+        <button onClick={clearToday}>清空今日</button>
+        <button className={onlyChanged ? 'on' : ''} onClick={() => setOnlyChanged(v => !v)}>只看变化</button>
       </div>
 
-      {sections.map(({ grade, trails }) => {
-        const visible = onlyMarked ? trails.filter(t => marks[t.name]) : trails
+      {sections.map(({ grade, units: gradeUnits }) => {
+        const visible = onlyChanged
+          ? gradeUnits.filter(u => book && current.marks[selected]?.[u.key])
+          : gradeUnits
         if (!visible.length) return null
-        const color = GRADE_META[grade].color
-        const open = trails.filter(t => marks[t.name] && isSkiable(marks[t.name]!)).length
+        const openedIn = gradeUnits.filter(u => book && statusOf(book, current, selected, u.key) === 'open').length
         return (
           <section className="cat-section" key={grade}>
             <div className="cat-head">
               <div className="cat-title">
-                <span className="dot" style={{ background: color }} />
+                <span className="dot" style={{ background: GRADE_META[grade].color }} />
                 {GRADE_META[grade].label}
                 <small>{GRADE_META[grade].sub}</small>
               </div>
-              <span className="cat-count" style={{ color, background: `${color}1f`, border: `1px solid ${color}33` }}>
-                {open} / {trails.length} 可滑
+              <span className="cat-count" style={{ color: GRADE_META[grade].color, background: `${GRADE_META[grade].color}1f`, border: `1px solid ${GRADE_META[grade].color}33` }}>
+                {openedIn} / {gradeUnits.length} 已开放
               </span>
             </div>
-            <div className="trail-list">
-              {visible.map(t => {
-                const st = marks[t.name]
-                const meta = st ? STATUS_META[st] : null
-                return (
-                  <button
-                    key={t.name}
-                    className={`tr-trail${st ? ` st-${st}` : ''}`}
-                    onClick={() => toggleRow(t.name)}
-                    aria-pressed={Boolean(st)}
-                  >
-                    <span className="trail-color" style={{ background: color }} />
-                    <span className="trail-main">
-                      <span className="trail-name">{t.name}</span>
-                      <span className="trail-meta">{[trailLen(t.len), t.note].filter(Boolean).join(' · ') || '—'}</span>
-                    </span>
-                    <span
-                      className="tr-status"
-                      style={st && meta ? { color: meta.color, background: `${meta.color}1c`, border: `1px solid ${meta.color}33` } : undefined}
-                    >
-                      {st && meta ? meta.label : '未标'}
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
+            <div className="trail-list">{visible.map(renderRow)}</div>
           </section>
         )
       })}
 
       <div className="tr-tip">
-        “明日预计”明天会自动顺延成“今日新开”；补雪、训练、临时关闭只影响当天，不会被继承。
+        “已开放”会长期保留，不用每天重标；每天只需要加“今日新开 / 明日预计开放”，以及当天的补雪、训练、临时关闭。
+        “明日预计开放”第二天会自动变成“今日新开”；补雪、训练、关闭只影响当天。
       </div>
 
       <div className="tr-actions">

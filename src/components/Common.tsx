@@ -6,12 +6,13 @@ import { dirText, levelColor, riskOf, windLevel, windName } from '../lib/wind'
 import { currentIndex, dayLabel, datesOf } from '../lib/time'
 import { Icon, WeatherIcon } from './Icons'
 
-export function Topline({ resort, snapshot, refreshing, onRefresh, onOpenPoster }: {
+export function Topline({ resort, snapshot, refreshing, onRefresh, onOpenPoster, onOpenTools }: {
   resort: ResortForecast
   snapshot: Snapshot
   refreshing: boolean
   onRefresh: () => void
   onOpenPoster: () => void
+  onOpenTools: () => void
 }) {
   return (
     <div className="topline">
@@ -19,6 +20,9 @@ export function Topline({ resort, snapshot, refreshing, onRefresh, onOpenPoster 
       <div className="topline-right">
         <button className="poster-mini" onClick={onOpenPoster} aria-label="生成天气概览图" title="生成天气概览图">
           <Icon name="image" size={13} />
+        </button>
+        <button className="poster-mini" onClick={onOpenTools} aria-label="所有工具" title="所有工具">
+          <Icon name="grid" size={13} />
         </button>
         <button className={`refresh-btn ${refreshing ? 'loading' : ''}`} onClick={onRefresh} aria-label="刷新天气">
           <Icon name="refresh" size={12} />

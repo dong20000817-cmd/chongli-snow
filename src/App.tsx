@@ -17,10 +17,11 @@ import { RoadScreen } from './screens/RoadScreen'
 import { SnowScreen } from './screens/SnowScreen'
 import { DevPage } from './screens/DevPage'
 import { PosterScreen } from './screens/Poster'
+import { ToolsSheet } from './components/ToolsSheet'
 import { TrailsScreen } from './screens/Trails'
 import { TrailPosterScreen } from './screens/TrailPoster'
 
-type Sheet = null | { type: 'switch' } | { type: 'why'; day: number } | { type: 'routes' }
+type Sheet = null | { type: 'switch' } | { type: 'why'; day: number } | { type: 'routes' } | { type: 'tools' }
 
 export default function App() {
   const { route, navigate } = useHashRoute()
@@ -124,6 +125,7 @@ export default function App() {
           onOpenWind={() => navigate('wind')}
           onOpenWeek={() => navigate('week')}
           onOpenPoster={() => navigate('poster')}
+          onOpenTools={() => setSheet({ type: 'tools' })}
         />
       )}
 
@@ -151,6 +153,9 @@ export default function App() {
           onSelect={id => { setRouteId(id); setSheet(null) }}
           onClose={() => setSheet(null)}
         />
+      )}
+      {sheet?.type === 'tools' && (
+        <ToolsSheet resortId={resort.id} onClose={() => setSheet(null)} />
       )}
       {sheet?.type === 'why' && (
         <WhySheet

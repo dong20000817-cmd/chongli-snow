@@ -538,3 +538,19 @@ body{overflow-x:hidden}
 .dc-road-advice{font-size:10px;line-height:1.55;color:#FFE9A8;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.16);border-radius:9px;padding:9px 10px;margin-top:9px}
 
 .dev-edit-link{color:#9ED4FF;text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- 所有工具（稳定入口） ---------- */
+.tools-list{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.tool-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.tool-row:active{background:rgba(255,255,255,.13)}
+.tool-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+.tool-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tool-title{font-size:12.5px;font-weight:680}
+.tool-sub{font-size:9px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-arrow{opacity:.28;flex:none}
+.tools-version{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.tools-version b{display:block;font-size:10px;font-weight:650}
+.tools-version small{display:block;font-size:8.5px;color:var(--ink4);margin-top:2px}
+.tools-version button{flex:none;font-size:9.5px;font-weight:650;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);color:#fff}
+.tools-version button:disabled{opacity:.6}
+.tools-msg{font-size:9.5px;color:#9ED4FF;margin-top:8px;text-align:center}

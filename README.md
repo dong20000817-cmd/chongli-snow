@@ -2,11 +2,27 @@
 
 崇礼 / 金山岭 **8 家雪场**的天气、路况、雪道开放与每日滑雪建议，为 iPhone 设计的 PWA。
 
-- 线上地址：<https://dong20000817-cmd.github.io/chongli-snow/>
+- 线上地址（固定，只收藏这一个）：<https://dong20000817-cmd.github.io/chongli-snow/>
 - 雪场：万龙、云顶、太舞、富龙、翠云山银河、多乐美地、雪如意、金山岭银河
 - 天气数据：Open-Meteo（CC BY 4.0），浏览器直接取数，不需要 Mac 开机
 - 雪道 / 路况：人工维护 JSON（见下文），不是官方实时 API
 - 技术：Vite + React + TypeScript + PWA，GitHub Pages 托管
+
+## 只有一个网址
+
+固定地址：<https://dong20000817-cmd.github.io/chongli-snow/>
+
+每次部署只更新这一个站，**不会换域名，也不会新建站点**。`#/poster`、`#/trails`、`#/trailposter` 只是同一个 App 里的页面，`#` 后面的部分不会产生新网站。
+
+首页右上角有两个小图标：图片是「天气概览图」，四个方块是「所有工具」——里面就是全部入口：
+
+- 天气概览图 `#/poster`
+- 雪道录入 `#/trails`
+- 雪道情报图 `#/trailposter`
+- 开发者简报 `#/dev`
+- 版本号 + 「检查更新」
+
+收藏根地址就够了；以后加功能也只会出现在「所有工具」里，不需要换链接。部署后 Service Worker 会自动更新并刷新一次；如果没生效，点「检查更新」。
 
 ## 怎么看
 
